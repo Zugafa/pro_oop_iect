@@ -38,17 +38,17 @@ public:
     //operatorul de scriere
     friend std::ostream& operator<<(std::ostream&, const DateAutentificare&);
 
-    std::string& getPlatforma() const
+    const std::string& getPlatforma() const
     {
         return numePlatforma;
     }
 
-    std::string& getUtilizator() const
+    const std::string& getUtilizator() const
     {
         return numeUtilizator;
     }
 
-    std::string& getParola() const
+    const std::string& getParola() const
     {
         return parola;
     }
