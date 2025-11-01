@@ -11,21 +11,21 @@
 class Configuratie
 {
     std::string cheieVigenere, caractereSpecialeValide;
-    int lungimeMinimaParola;
+    std::size_t lungimeMinimaParola;
 
 public:
     // Constructor de initializare cu valori default
     Configuratie()
         : cheieVigenere{"ENCRYPTER"},
           caractereSpecialeValide{"!@#$%^&*"},
-          lungimeMinimaParola{8}
+          lungimeMinimaParola{8u}
     {
     }
 
     // Gettere const
     [[nodiscard]] const std::string& getCheieVigenere() const { return cheieVigenere; }
     [[nodiscard]] const std::string& getCaractereSpecialeValide() const { return caractereSpecialeValide; }
-    [[nodiscard]] int getLungimeMinimaParola() const { return lungimeMinimaParola; }
+    [[nodiscard]] std::size_t getLungimeMinimaParola() const { return lungimeMinimaParola; }
 
     ~Configuratie() = default; // Regula lui Zero
 
