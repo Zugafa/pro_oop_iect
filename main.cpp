@@ -1,134 +1,146 @@
 #include <iostream>
 #include <string>
 #include <cctype>
+#include <utility>      // Pentru std::swap (dacă am folosi copy-and-swap)
+#include <exception>    // Pentru std::exception
+#include <cassert>      // Pentru testarea cu assert()
 
-class DateAutentificare
+// =============================================================
+// CLASA Configuratie (Clasa #3)
+// =============================================================
+class Configuratie
 {
-    std::string numePlatforma, numeUtilizator, parola;
+    std::string cheieVigenere, caractereSpecialeValide;
+    int lungimeMinimaParola;
 
 public:
-    //constructor explicit de init cu lista de parametri
-    DateAutentificare(const std::string& nPlat, const std::string& nUtiliz, const std::string& pass)
+    // Constructor de initializare cu valori default
+    Configuratie()
+        : cheieVigenere{"ENCRYPTER"},
+          caractereSpecialeValide{"!@#$%^&*"},
+          lungimeMinimaParola{8}
+    {
+    }
+
+    // Gettere const
+    [[nodiscard]] const std::string& getCheieVigenere() const { return cheieVigenere; }
+    [[nodiscard]] const std::string& getCaractereSpecialeValide() const { return caractereSpecialeValide; }
+    [[nodiscard]] int getLungimeMinimaParola() const { return lungimeMinimaParola; }
+
+    ~Configuratie() = default; // Regula lui Zero
+
+    // operator<<
+    friend std::ostream& operator<<(std::ostream& out, const Configuratie& config);
+};
+
+// Definitia operator<< pentru Configuratie
+std::ostream& operator<<(std::ostream& out, const Configuratie& config)
+{
+    out << "Setari Configurare:\n";
+    out << "  -> Cheie Vigenere: " << config.cheieVigenere << "\n";
+    out << "  -> Lungime Minima Parola: " << config.lungimeMinimaParola << "\n";
+    out << "  -> Caractere Speciale: " << config.caractereSpecialeValide << "\n";
+    return out; // Corectat: returnam 'out'
+}
+
+// =============================================================
+// CLASA DateAutentificare (Clasa #1)
+// =============================================================
+class DateAutentificare
+{
+private:
+    std::string numePlatforma, numeUtilizator, parola;
+    Configuratie config; // Compunere
+
+public:
+    // Constructor explicit de inițializare (cu compunere)
+    explicit DateAutentificare(const std::string& nPlat, const std::string& nUtiliz, const std::string& pass,
+                               const Configuratie& configExterna)
         : numePlatforma{nPlat},
           numeUtilizator{nUtiliz},
-          parola{pass}
+          parola{pass},
+          config{configExterna} // Initializam membrul config
     {
     }
 
-    //constructor copiere
-    DateAutentificare(const DateAutentificare& sursa) : numePlatforma{sursa.numePlatforma},
-                                                        numeUtilizator{sursa.numeUtilizator},
-                                                        parola{sursa.parola}
-    {
-    }
-
-    //supraincarcarea op =
-    DateAutentificare& operator=(const DateAutentificare& sursa)
-    {
-        //verificare pentru cazuri de tip ob=ob
-        if (this == &sursa)
-            return *this;
-
-        this->numePlatforma = sursa.numePlatforma;
-        this->numeUtilizator = sursa.numeUtilizator;
-        this->parola = sursa.parola;
-        return *this;
-    }
-
-    //operatorul de scriere
-    friend std::ostream& operator<<(std::ostream&, const DateAutentificare&);
-
-    const std::string& getPlatforma() const
-    {
-        return numePlatforma;
-    }
-
-    const std::string& getUtilizator() const
-    {
-        return numeUtilizator;
-    }
-
-    const std::string& getParola() const
-    {
-        return parola;
-    }
-
-    //destructor default
+    // Regula celor Trei (generate de compilator sunt ok, dar le scriem pt claritate)
+    DateAutentificare(const DateAutentificare& sursa) = default;
+    DateAutentificare& operator=(const DateAutentificare& sursa) = default;
     ~DateAutentificare() = default;
 
-    //functie afisare
-    void afisare() const
-    {
-        std::cout << "Nume platforma: " << numePlatforma
-            << "\tUtilizator: " << numeUtilizator <<
-            "\tParola: [hashed]\n";
-    }
+    // Declaratia operator<<
+    friend std::ostream& operator<<(std::ostream& out, const DateAutentificare& date);
 
-    //functie de setat o (alta) parola pentru o platforma
+    // Declaratii friend pentru operatorii de comparare (necesari pt assert)
+    friend bool operator==(const DateAutentificare& lhs, const DateAutentificare& rhs);
+    friend bool operator!=(const DateAutentificare& lhs, const DateAutentificare& rhs);
+
+    // Getters const
+    const std::string& getPlatforma() const { return numePlatforma; }
+    const std::string& getUtilizator() const { return numeUtilizator; }
+    const std::string& getParola() const { return parola; }
+    // Getter pentru config (necesar pt adaugaCont)
+    const Configuratie& getConfig() const { return config; }
+
+    // --- Funcții Membre Publice Netriviale (3 funcții) ---
+
+    // 1. Setter Parola cu Validare
     void setter_parola(const std::string& nouaParola)
     {
-        if (nouaParola.length() < 8)
+        // Folosim obiectul 'config'
+        if (nouaParola.length() < config.getLungimeMinimaParola())
         {
-            std::cout << "Parola trebuie sa fie mai mare de 8 caractere\n";
+            std::cout << "[INFO] Parola n-a fost setata (prea scurta).\n";
             return;
         }
 
         bool areLiteraMare = false;
         bool areCaracterSpecial = false;
-        std::string caractereSpeciale = "!@#$%^&*";
+        std::string caractereValide = config.getCaractereSpecialeValide();
 
         for (const auto& litera : nouaParola)
         {
-            if (isupper(litera))
-                areLiteraMare = true;
-            else if (caractereSpeciale.find(litera) != std::string::npos)
-                areCaracterSpecial = true;
+            if (isupper(litera)) areLiteraMare = true;
+            else if (caractereValide.find(litera) != std::string::npos) areCaracterSpecial = true;
             if (areLiteraMare && areCaracterSpecial)
                 break;
         }
+
         if (areLiteraMare && areCaracterSpecial)
         {
-            parola = nouaParola;
-            std::cout << "Parola a fost setata cu succes\n";
+            this->parola = nouaParola;
+            std::cout << "[INFO] Parola a fost setata cu succes pentru " << this->numePlatforma << "!\n";
             return;
         }
-
         std::cout << "Parola trebuie sa contina o litera mare si un caracter special\n";
-        return;
     }
 
+    // 2. Criptare Vigenere
     void CriptareVigenere()
     {
-        std::string Cheie = "ENCRYPTER"; //daca se schimba cheia, rog sa se scrie CU CAPSLOCK
+        std::string Cheie = config.getCheieVigenere(); // Folosim config
         int pozCheie = 0, lenCheie = Cheie.length();
         for (auto& literaParola : parola)
         {
-            if (!isalpha(literaParola))
-                continue;
-
-            char baza = isupper(literaParola) ? 'A' : 'a';
-
+            if (!std::isalpha(literaParola)) continue;
+            char baza = std::isupper(literaParola) ? 'A' : 'a';
             int valLitera = literaParola - baza;
             int valCheie = Cheie[pozCheie % lenCheie] - 'A';
             int valNouaLitera = (valLitera + valCheie) % 26;
-
             literaParola = valNouaLitera + baza;
             pozCheie++;
         }
     }
 
+    // 3. Decriptare Vigenere
     void deCriptareVigenere()
     {
-        std::string Cheie = "ENCRYPTER";
+        std::string Cheie = config.getCheieVigenere(); // Folosim config
         int pozCheie = 0, lenCheie = Cheie.length();
-
         for (auto& literaParola : parola)
         {
-            if (!isalpha(literaParola))
-                continue;
-
-            char baza = isupper(literaParola) ? 'A' : 'a';
-
+            if (!std::isalpha(literaParola)) continue;
+            char baza = std::isupper(literaParola) ? 'A' : 'a';
             int valLiteraCriptata = literaParola - baza;
             int valCheie = Cheie[pozCheie % lenCheie] - 'A';
             int valLiteraNoua = (valLiteraCriptata - valCheie + 26) % 26;
@@ -138,218 +150,278 @@ public:
     }
 };
 
+// Definiția operator<< pentru DateAutentificare
 std::ostream& operator<<(std::ostream& out, const DateAutentificare& date)
 {
-    out << "Nume platforma: " << date.numePlatforma
-        << "\tUtilizator: " << date.numeUtilizator <<
-        "\tParola: " << date.parola << std::endl;
+    out << "  -> Platforma: " << date.numePlatforma << " | Utilizator: " << date.numeUtilizator <<
+        " | Parola Curenta: [" << date.parola << "]\n";
     return out;
 }
 
+// Definiția operator== (necesar pt assert)
+bool operator==(const DateAutentificare& lhs, const DateAutentificare& rhs)
+{
+    // Comparam atributele private
+    return lhs.numePlatforma == rhs.numePlatforma &&
+        lhs.numeUtilizator == rhs.numeUtilizator &&
+        lhs.parola == rhs.parola;
+    // Nu comparam 'config' intentionat, e un detaliu de implementare
+}
+
+// Definiția operator!= (necesar pt assert)
+bool operator!=(const DateAutentificare& lhs, const DateAutentificare& rhs)
+{
+    return !(lhs == rhs);
+}
+
+
+// -------------------------------------------------------------
+// CLASA Utilizator (Clasa #2, Compunere)
+// -------------------------------------------------------------
 class Utilizator
 {
+private:
     std::string nume, email;
-    DateAutentificare** conturi;
+    DateAutentificare** conturi; // Compunere
     int nrConturi, capacitate;
+    Configuratie config; // Compunere
+    void realocaMemorie()
+    {
+        if (nrConturi == capacitate)
+        {
+            capacitate *= 2;
+            DateAutentificare** nouArray = new DateAutentificare*[capacitate];
+            for (int k = 0; k < nrConturi; k++) { nouArray[k] = conturi[k]; }
+            delete[] conturi;
+            conturi = nouArray;
+            std::cout << "[INFO] Capacitatea vectorului a fost marita la " << capacitate << "\n";
+        }
+    }
 
 public:
-    //constructor de initializare
-    Utilizator(const std::string& nume, const std::string& email)
-        : nume{nume}, email{email}, nrConturi{0}, capacitate{10}
+    // Constructor de inițializare (cu compunere)
+    explicit Utilizator(const std::string& n, const std::string& e, const Configuratie& configExterna)
+        : nume{n}, email{e}, nrConturi{0}, capacitate{10}, config{configExterna}
     {
         conturi = new DateAutentificare*[capacitate];
     }
 
-    //constructor copiere
+    // --- REGULA CELOR TREI (CRITICA) ---
+
+    // Constructor de copiere (Deep Copy)
     Utilizator(const Utilizator& sursa)
-        : nume{sursa.nume}, email{sursa.email}, nrConturi{sursa.nrConturi}, capacitate{sursa.capacitate}
+        : nume{sursa.nume}, email{sursa.email}, nrConturi{sursa.nrConturi},
+          capacitate{sursa.capacitate}, config{sursa.config}
     {
         conturi = new DateAutentificare*[capacitate];
         for (int i = 0; i < nrConturi; i++)
-            conturi[i] = new DateAutentificare(*sursa.conturi[i]);
+            conturi[i] = new DateAutentificare(*sursa.conturi[i]); // Deep copy
     }
 
+    // Operator de atribuire (Deep Copy)
     Utilizator& operator=(const Utilizator& sursa)
     {
-        if (this == &sursa)
-            return *this;
-
-        for (int i = 0; i < this->nrConturi; i++)
-            delete this->conturi[i]; // Șterge obiectele DateAutentificare vechi
+        if (this == &sursa) return *this;
+        for (int i = 0; i < this->nrConturi; i++) delete this->conturi[i];
         delete[] this->conturi;
 
         nume = sursa.nume;
         email = sursa.email;
         nrConturi = sursa.nrConturi;
         capacitate = sursa.capacitate;
+        config = sursa.config;
 
         conturi = new DateAutentificare*[capacitate];
         for (int i = 0; i < nrConturi; i++)
-            conturi[i] = new DateAutentificare(*sursa.conturi[i]);
+            conturi[i] = new DateAutentificare(*sursa.conturi[i]); // Deep copy
         return *this;
     }
 
-    friend std::ostream& operator<<(std::ostream&, const Utilizator&);
-
-    DateAutentificare* getContByIndex(int index) const
-    {
-        if (index >= 0 && index < nrConturi)
-            return conturi[index];
-        return nullptr;
-    }
-
-    //destructor
+    // Destructor (Curățare)
     ~Utilizator()
     {
-        for (int i = 0; i < nrConturi; i++)
-            delete conturi[i];
+        for (int i = 0; i < nrConturi; i++) delete conturi[i];
         delete[] conturi;
     }
 
+    // Declaratia operator<<
+    friend std::ostream& operator<<(std::ostream& out, const Utilizator& user);
+
+    // Declaratii friend pentru operatorii de comparare (necesari pt assert)
+    friend bool operator==(const Utilizator& lhs, const Utilizator& rhs);
+    friend bool operator!=(const Utilizator& lhs, const Utilizator& rhs);
+
+    // Getter securizat (const)
+    DateAutentificare* getContByIndex(int index) const
+    {
+        if (index >= 0 && index < nrConturi) return conturi[index];
+        return nullptr;
+    }
+
+    // --- Funcții Membre Publice Netriviale ---
+
+    // 1. Adauga cont (cu realocare, validare si INSERARE SORTATA)
     void adaugaCont(DateAutentificare* nouCont)
     {
-        if (nouCont->getParola().length() < 8)
+        // Validare: folosim getter-ul din DateAutentificare pt a accesa config-ul
+        if (nouCont->getParola().length() < nouCont->getConfig().getLungimeMinimaParola())
         {
-            std::cout << "[EROARE ADĂUGARE] Cont respins: Parola este prea scurtă (<8 caractere).\n";
-            delete nouCont;
+            std::cout << "[EROARE ADĂUGARE] Cont respins (" << nouCont->getPlatforma() <<
+                "): Parola este prea scurtă.\n";
+            delete nouCont; // Prevenire memory leak
             return;
         }
-        if (nrConturi == capacitate)
-        {
-            capacitate *= 2;
-            DateAutentificare** nouArray = new DateAutentificare*[capacitate];
-            for (int k = 0; k < nrConturi; k++)
-                nouArray[k] = conturi[k];
-            delete[] conturi;
-            conturi = nouArray;
-        }
 
-        //inserare alfabetica
+        realocaMemorie();
+
         std::string platformaNoua = nouCont->getPlatforma();
-
         int i = 0;
-        while (i < nrConturi && conturi[i]->getPlatforma() < platformaNoua)
-            i++;
-        for (int j = nrConturi; j > i; j--)
-            conturi[j] = conturi[j - 1];
+        while (i < nrConturi && conturi[i]->getPlatforma() < platformaNoua) { i++; }
+        for (int j = nrConturi; j > i; j--) { conturi[j] = conturi[j - 1]; }
 
         conturi[i] = nouCont;
         nrConturi++;
     }
 
+    // 2. Sterge cont (cu cautare si shift-left)
     void stergeCont(const std::string& platforma, const std::string& username)
     {
         for (int i = 0; i < nrConturi; i++)
         {
-            if (conturi[i]->getPlatforma() == platforma &&
-                conturi[i]->getUtilizator() == username)
+            if (conturi[i]->getPlatforma() == platforma && conturi[i]->getUtilizator() == username)
             {
+                std::cout << "[INFO] S-a sters contul: " << platforma << "\n";
                 delete conturi[i];
-                for (int j = i; j < nrConturi - 1; j++)
-                    conturi[j] = conturi[j + 1];
+                for (int j = i; j < nrConturi - 1; j++) conturi[j] = conturi[j + 1];
                 nrConturi--;
                 return;
             }
         }
+        std::cout << "[EROARE] Nu s-a gasit contul " << platforma << " pentru stergere.\n";
     }
 };
 
+// Definiția operator<< pentru Utilizator
 std::ostream& operator<<(std::ostream& out, const Utilizator& user)
 {
-    out << user.nume << " " << user.email << "\n";
-    out << "Conturi:\n";
-    for (int i = 0; i < user.nrConturi; i++)
-        out << *user.conturi[i] << "\n"; //se foloseste afisarea implementata deja la
-    //DateAutentificare prin dereferentierea ob cu * ;)
+    out << "\n======================================================\n";
+    out << "UTILIZATOR: " << user.nume << " (" << user.email << ")\n";
+    out << "  -> Conturi: " << user.nrConturi << " / Capacitate: " << user.capacitate << "\n";
+    out << "------------------------------------------------------\n";
+    if (user.nrConturi == 0) { out << "   -- Niciun cont adaugat --\n"; }
+    else
+    {
+        for (int i = 0; i < user.nrConturi; i++)
+        {
+            out << "[" << i + 1 << "]" << *user.conturi[i];
+        }
+    }
+    out << "======================================================\n";
     return out;
 }
 
+// Definiția operator== (necesar pt assert)
+bool operator==(const Utilizator& lhs, const Utilizator& rhs)
+{
+    // Comparam datele simple
+    if (lhs.nume != rhs.nume || lhs.email != rhs.email || lhs.nrConturi != rhs.nrConturi)
+        return false;
 
+    // Comparam in profunzime (deep compare) fiecare cont
+    for (int i = 0; i < lhs.nrConturi; i++)
+    {
+        // Folosim operator== de la DateAutentificare
+        if (*(lhs.conturi[i]) != *(rhs.conturi[i]))
+            return false;
+    }
+
+    return true; // Daca totul e identic
+}
+
+// Definiția operator!= (necesar pt assert)
+bool operator!=(const Utilizator& lhs, const Utilizator& rhs)
+{
+    return !(lhs == rhs);
+}
+
+
+// =============================================================
+// FUNCTIA MAIN (Scenariul de Testare)
+// =============================================================
 int main()
 {
     std::cout << std::unitbuf;
-
     std::cout << "--- START TESTARE S.C.R.I.P.T. (PARTEA 1) ---\n";
 
-    // 1. CREAREA UNUI UTILIZATOR (Testează constructorul Utilizator)
-    Utilizator userPrincipal("Ionut Popescu", "ionut.popescu@gmail.com");
-    std::cout << userPrincipal; // Testează operator<< pentru Utilizator
+    // 1. TEST CLASA Configuratie
+    Configuratie configDefault;
+    std::cout << configDefault;
 
-    // 2. ADĂUGAREA DE CONTURI ȘI TESTAREA INSERĂRII SORTATE (adaugaCont)
-    std::cout << "\n--- TEST ADĂUGARE ȘI SORTARE (dupa Platforma) ---\n";
+    // 2. TEST CREARE UTILIZATOR
+    Utilizator userPrincipal("Ionut Popescu", "ionut.popescu@gmail.com", configDefault);
 
-    // Adaugăm in ordine aleatorie pentru a verifica sortarea:
-    userPrincipal.adaugaCont(new DateAutentificare("GitHub", "ionut_dev", "P@sWd12345"));
-    userPrincipal.adaugaCont(new DateAutentificare("LinkedIn", "ionut.popescu", "L1nk3dIn!2025"));
-    userPrincipal.adaugaCont(new DateAutentificare("Amazon", "ionut.amazon", "Secure!PassA1"));
-    userPrincipal.adaugaCont(new DateAutentificare("Facebook", "ionut_fb", "f1nallY"));
-    // Parola invalidă (mai putin de 8 caractere)
+    // 3. TEST adaugaCont (Validare, Realocare, Sortare)
+    std::cout << "\n--- TEST ADĂUGARE ȘI SORTARE ---\n";
+    userPrincipal.adaugaCont(new DateAutentificare("GitHub", "ionut_dev", "P@sWd12345", configDefault));
+    userPrincipal.adaugaCont(new DateAutentificare("LinkedIn", "ionut.popescu", "L1nk3dIn!2025", configDefault));
+    userPrincipal.adaugaCont(new DateAutentificare("Amazon", "ionut.amazon", "Secure!PassA1", configDefault));
 
-    // Cont invalid (va testa setter_parola)
-    userPrincipal.adaugaCont(new DateAutentificare("Twitter", "ionut_x", "weak"));
+    // Teste parola invalida (ar trebui respinse)
+    userPrincipal.adaugaCont(new DateAutentificare("Facebook", "ionut_fb", "f1nallY", configDefault)); // Respins
+    userPrincipal.adaugaCont(new DateAutentificare("Twitter", "ionut_x", "weak", configDefault)); // Respins
 
-    // Re-adaugam un cont cu parola valida
-    userPrincipal.adaugaCont(new DateAutentificare("Netflix", "ionut.netflix", "N3tfLix25!"));
+    userPrincipal.adaugaCont(new DateAutentificare("Netflix", "ionut.netflix", "N3tfLix25!", configDefault));
 
-    // Afisăm. Ar trebui să vedem ordinea: Amazon, Facebook, GitHub, LinkedIn, Netflix, Twitter
+    // Lista ar trebui sa aiba 4 conturi, sortate: Amazon, GitHub, LinkedIn, Netflix
     std::cout << userPrincipal;
 
-    // 3. TESTAREA CRIPTĂRII / DECRIPTĂRII (funcții DateAutentificare)
+    // 4. TEST FUNCTII NETRIVIALE (Criptare, Decriptare, Setter)
     std::cout << "\n--- TEST CRIPTARE/DECRIPTARE VIGENERE ---\n";
+    DateAutentificare* contAmazon = userPrincipal.getContByIndex(0); // Amazon
+    if (contAmazon)
+    {
+        std::cout << "Original:" << *contAmazon;
+        contAmazon->CriptareVigenere();
+        std::cout << "Criptat: " << *contAmazon;
+        contAmazon->deCriptareVigenere();
+        std::cout << "Decriptat:" << *contAmazon;
 
-    // Presupunem ca Amazon este la indexul 0 (datorita sortarii)
-    DateAutentificare* contAmazon = userPrincipal.getContByIndex(0);
+        // Testam setter_parola
+        contAmazon->setter_parola("ParolaNouaValida123!");
+        contAmazon->setter_parola("scurta"); // Test respingere
+        std::cout << "Dupa setter:" << *contAmazon;
+    }
 
-    std::cout << "Parola originala: " << *contAmazon;
+    // 5. TEST REGULA CELOR TREI (cu assert, conform cerintei)
+    std::cout << "\n--- TEST REGULA CELOR TREI (cu assert) ---\n";
 
-    contAmazon->CriptareVigenere();
-    std::cout << "Parola criptata: " << *contAmazon; // Testeaza operator<< cu parola schimbata
-
-    contAmazon->deCriptareVigenere();
-    std::cout << "Parola decriptata: " << *contAmazon;
-
-    DateAutentificare* contLinkedIn = userPrincipal.getContByIndex(2);
-
-    std::cout << "Parola originala: " << *contLinkedIn;
-
-    contLinkedIn->CriptareVigenere();
-    std::cout << "Parola criptata: " << *contLinkedIn; // Testeaza operator<< cu parola schimbata
-
-    contLinkedIn->deCriptareVigenere();
-    std::cout << "Parola decriptata: " << *contLinkedIn;
-
-    // 4. TESTAREA COPIERII (Regula celor Trei: Constructor de Copiere)
-    std::cout << "\n--- TEST COPIERE (Constructor de Copiere - Deep Copy) ---\n";
-
+    // Test Constructor Copiere (Deep Copy)
     Utilizator userCopie = userPrincipal; // Aici se apeleaza Constructorul de Copiere
-    std::cout << "User Original (ptr u1): " << &userPrincipal << "\n";
-    std::cout << "User Copie (ptr u2): " << &userCopie << "\n";
+    assert((std::cout << "CC: Atributele se copiaza corect\n", userPrincipal == userCopie));
 
-    // Modificăm contul Amazon in userCopie (ar trebui sa nu afecteze userPrincipal)
-    userCopie.getContByIndex(0)->setter_parola("NEW_STRONG_PASS!1");
-    std::cout << userCopie;
-    std::cout << userPrincipal; // Contul original ar trebui sa aiba parola veche
+    // Modificam copia (adaugam un cont nou)
+    userCopie.adaugaCont(new DateAutentificare("Z-Test", "z-user", "ParolaValida123", configDefault));
+    std::cout << "[INFO] S-a adaugat 'Z-Test' in copie.\n";
+    assert((std::cout << "CC: Modificarea copiei nu modifica originalul (Deep Copy)\n", userPrincipal != userCopie));
 
-    // 5. TESTAREA ATRIBUIRII (Regula celor Trei: operator=)
-    std::cout << "\n--- TEST ATRIBUIRE (operator=) --- \n";
-    Utilizator user3("Vasile", "v@example.com");
-    user3 = userPrincipal; // Aici se apelează operator=
+    // Test Operator Atribuire (Deep Copy)
+    Utilizator userAtribuit("Vasile", "v@test.com", configDefault); // Obiect separat
+    userAtribuit = userPrincipal; // Aici se apelează operator=
+    assert((std::cout << "OP=: Atributele se copiaza corect\n", userPrincipal == userAtribuit));
 
-    // Testăm ștergerea dintr-o copie (user3). Daca userPrincipal nu crapa, e Deep Copy.
-    user3.stergeCont("Netflix", "ionut.netflix");
+    // Modificam noua copie (stergem un cont)
+    userAtribuit.stergeCont("Amazon", "ionut.amazon");
+    assert(
+        (std::cout << "OP=: Modificarea copiei nu modifica originalul (Deep Copy)\n", userPrincipal != userAtribuit));
 
-    std::cout << user3;
-    std::cout << userPrincipal; // Ar trebui sa fie inca 5 conturi, inclusiv Netflix
+    // 6. TEST STERGERE CONT (din original)
+    std::cout << "\n--- TEST STERGERE CONT (din original) ---\n";
+    userPrincipal.stergeCont("LinkedIn", "ionut.popescu"); // Stergem din mijloc
+    userPrincipal.stergeCont("NonExistent", "user"); // Test stergere esuata
 
-    // 6. TESTAREA ȘTERGERII FINALE (stergeCont)
-    std::cout << "\n--- TEST ȘTERGERE CONT (Sterge Facebook si GitHub) ---\n";
-    userPrincipal.stergeCont("Facebook", "ionut_fb"); // Sters in mijlocul listei
-    userPrincipal.stergeCont("GitHub", "ionut_dev"); // Sters altundeva
+    std::cout << userPrincipal; // Ar trebui sa aiba 3 conturi: Amazon, GitHub, Netflix
 
-    std::cout << userPrincipal;
-
-    std::cout << "--- TESTARE FINALIZATA. Memoria va fi eliberata de Destructori (implicit, la iesirea din main) ---";
-
-    // Destructorii vor fi apelati automat pentru userPrincipal, userCopie, si user3
+    std::cout << "\n--- TESTARE PARTEA I FINALIZATA ---\n";
+    // Toti destructorii (userPrincipal, userCopie, userAtribuit) sunt apelati automat aici
     return 0;
 }
