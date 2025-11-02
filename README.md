@@ -12,7 +12,7 @@
 
 ---
 
-## 🚀 Funcționalități (MI)
+## 🚀 Funcționalități (M1)
 
 Versiunea curentă (v0.1) stabilește fundația aplicației și include următoarele funcționalități de bază:
 
