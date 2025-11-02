@@ -12,7 +12,7 @@
 
 ---
 
-## 🚀 Funcționalități (Stadiu Partea I)
+## 🚀 Funcționalități (MI)
 
 Versiunea curentă (v0.1) stabilește fundația aplicației și include următoarele funcționalități de bază:
 
