@@ -12,37 +12,43 @@
 
 ---
 
-## 🚀 Funcționalități (M1)
+## 🚀 Funcționalități și Noutăți (M2)
 
-Versiunea curentă (v0.1) stabilește fundația aplicației și include următoarele funcționalități de bază:
+Versiunea curentă (v0.2) extinde funcționalitatea aplicației prin introducerea unui sistem polimorfic de stocare și a unui management robust al erorilor:
 
-* **Managementul Utilizatorilor:** Permite crearea unui profil de utilizator (`Utilizator`) care poate deține o colecție de date de autentificare.
-* **Managementul Conturilor:** Implementează logica de bază pentru adăugarea și ștergerea datelor de autentificare (`DateAutentificare`) din profilul unui utilizator.
-* **Inserare Sortată:** Toate conturile adăugate în profilul unui utilizator sunt **sortate automat alfabetic** (după numele platformei) pentru o organizare logică.
-* **Validarea Parolelor:** La adăugarea unui cont nou, sistemul validează parola conform unor reguli de securitate (stabilite în `Configuratie`) și **respinge** conturile care nu îndeplinesc cerințele minime (ex. lungime).
-* **Criptare (Proof-of-Concept):** Include un mecanism de criptare (Cifrul Vigenère) pentru a demonstra securizarea parolelor stocate.
-* **Configurare Centralizată:** Regulile de securitate (cheia de criptare, lungimea minimă a parolei, caracterele speciale permise) sunt stocate centralizat într-o clasă de configurare, permițând modificarea facilă a politicilor de securitate.
-* **Management Robust al Memoriei:** Asigură o gestionare corectă a memoriei pentru colecțiile dinamice de conturi prin implementarea corectă a **Regulii celor Trei** (Constructor de Copiere, `operator=`, Destructor), garantând o "Deep Copy" și prevenind memory leaks.
+* **Seif Polimorfic:** Aplicația nu mai stochează doar parole. Utilizatorul poate adăuga acum diverse tipuri de obiecte securizate în același seif:
+    * **Conturi** (`DateAutentificare`)
+    * **Identități** (`Identitate` - ex. date personale, adrese)
+    * **Carduri Bancare** (`CardBancar`)
+    * **Notițe Securizate** (`NotitaSecurizata`)
+* **Audit de Securitate:** Fiecare tip de obiect are propria logică de verificare a securității (ex: verificarea tăriei parolei pentru conturi, verificarea formatului pentru carduri).
+* **Management Automat al Memoriei:** Utilizarea **Smart Pointers** (`std::unique_ptr`) și a containerelor **STL** (`std::vector`) elimină riscul de memory leaks și erori de gestionare a resurselor.
+* **Sistem Avansat de Erori:** În loc de mesaje simple în consolă, aplicația folosește o ierarhie de **Excepții Custom** care oferă nu doar diagnosticul erorii, ci și sugestii inteligente pentru rezolvarea ei (ex: "Parola e prea scurtă, mai adaugă X caractere").
+* **Criptare și Decriptare:** Funcționalități specifice disponibile pentru conturile de autentificare, accesate dinamic prin `dynamic_cast`.
 
 ---
 
-## 🏛️ Arhitectura Curentă (Partea I)
+## 🏛️ Arhitectura Curentă (Partea II)
 
-Fundația proiectului (Partea I) este construită pe **principiul compunerii** și este formată din 3 clase principale:
+Milestone 2 a transformat arhitectura într-una bazată pe **Moștenire și Polimorfism**:
 
-### 1. Clasa `Configuratie`
-Stochează și gestionează centralizat toate regulile de securitate și setările aplicației (ex. cheia Vigenère, lungimea minimă a parolei).
+### 1. Ierarhia de Clase (Moștenire)
+La baza sistemului stă clasa abstractă **`Seif`**, care definește contractul pentru orice obiect stocabil (interfață pur virtuală).
+* **`Seif` (Bază Abstractă):** Definește metodele virtuale pure (`clone`, `getTip`, `afiseaza`, `verificaSecuritate`) și gestionează atribute statice (contor obiecte).
+* **Clase Derivate:** Implementează comportamente specifice:
+    * `DateAutentificare`: Include logica de criptare Vigenère și validare parole.
+    * `Identitate`, `CardBancar`, `NotitaSecurizata`: Stochează date specifice și implementează afișarea și auditul propriu.
 
-### 2. Clasa `DateAutentificare`
-Reprezintă un singur set de date de autentificare (platformă, username, parolă).
-* **Compunere:** *Are o* `Configuratie` pentru a ști cum să valideze sau să cripteze datele.
-* Implementează funcții netriviale precum `CriptareVigenere()` și `setter_parola()`.
+### 2. Managementul Resurselor (Utilizator)
+Clasa `Utilizator` a fost refactorizată complet pentru a respecta principiile C++ Modern:
+* **STL & Smart Pointers:** Stochează obiectele într-un `std::vector<std::unique_ptr<Seif>>`.
+* **Polimorfism:** Permite adăugarea, ștergerea și afișarea eterogenă a obiectelor.
+* **Copy-and-Swap:** Implementează corect copierea profundă (Deep Copy) folosind idiomul "Virtual Constructor" (`clone()`).
 
-### 3. Clasa `Utilizator`
-Reprezintă profilul utilizatorului care deține conturile.
-* **Compunere:** *Are o* `Configuratie` (pentru a o pasa conturilor noi) și *are* un array alocat dinamic de `DateAutentificare*`.
-* Implementează **Regula celor Trei** pentru managementul corect al memoriei (Deep Copy).
-* Implementează funcții netriviale complexe, precum `adaugaCont()` (cu realocare de memorie și inserare sortată) și `stergeCont()` (cu căutare și `shift-left`).
+### 3. Ierarhia de Excepții
+Gestionarea erorilor se face printr-o ierarhie dedicată derivată din `std::exception`:
+* **`ScriptException` (Bază):** Definește interfața pentru excepții cu sugestii (`getSugestie()`).
+* **Derivate:** `EroareValidare` (calcul matematic pentru validare), `ObiectNegasit` (căutare eșuată), `EroareAcces` (index out of bounds).
 
 ---
 
@@ -57,5 +63,5 @@ cmake -B build
 # 2. Compilarea proiectului
 cmake --build build
 
-# 3. Rularea scenariului de testare (din Partea I)
-./build/S.C.R.I.P.T
+# 3. Rularea scenariului de testare (din Partea II)
+./build/oop
