@@ -66,6 +66,12 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         CardBancar.h
         ScriptException.cpp
         ScriptException.h
+        EroareValidare.cpp
+        EroareValidare.h
+        ObiectNegasit.cpp
+        ObiectNegasit.h
+        EroareAcces.cpp
+        EroareAcces.h
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )

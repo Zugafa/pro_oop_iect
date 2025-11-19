@@ -13,21 +13,14 @@ private:
 
 public:
     // Constructor explicit de initializare (cu compunere)
-    explicit DateAutentificare(const std::string& eticheta, const std::string& nPlat, const std::string& nUtiliz,
+    explicit DateAutentificare(const std::string& nPlat,
+                               const std::string& nUtiliz,
                                const std::string& pass,
-                               const Configuratie& configExterna)
-        :
-        Seif{eticheta},
-        numePlatforma{nPlat},
-        numeUtilizator{nUtiliz},
-        parola{pass},
-        config{configExterna} // init config
-    {
-    }
+                               const Configuratie& configExterna);
 
     DateAutentificare(const DateAutentificare& sursa) = default;
     DateAutentificare& operator=(const DateAutentificare& sursa) = default;
-    ~DateAutentificare() = default;
+    ~DateAutentificare() override = default;
 
     [[nodiscard]] std::unique_ptr<Seif> clone() const override
     {
@@ -60,6 +53,8 @@ public:
 
     // 3. Decriptare Vigenere
     void deCriptareVigenere();
+
+    void verificaSecuritate() const override;
 };
 
 #endif //OOP_DATEAUTENTIFICARE_H

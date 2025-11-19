@@ -1,7 +1,18 @@
 #include "Seif.h"
 
-inline std::ostream& operator<<(std::ostream& os, const Seif& s)
+int Seif::nrObiecteTotale = 0;
+
+Seif::Seif(const std::string& eticheta) : eticheta(eticheta)
 {
-    s.afiseaza(os);
-    return os;
+    nrObiecteTotale++;
+}
+
+Seif::~Seif()
+{
+    nrObiecteTotale--;
+}
+
+int Seif::getNumarObiecteTotale()
+{
+    return nrObiecteTotale;
 }

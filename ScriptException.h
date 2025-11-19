@@ -5,14 +5,18 @@
 
 class ScriptException : public std::exception
 {
-    std::string mesaj;
+protected:
+    std::string mesajEroare;
 
 public:
-    explicit ScriptException(const std::string& m) : mesaj{m}
+    explicit ScriptException(const std::string& m) : mesajEroare(m)
     {
-    };
-    [[nodiscard]] const char* what() const noexcept override { return mesaj.c_str(); }
+    }
+
+    [[nodiscard]] const char* what() const noexcept override;
+
+    [[nodiscard]] virtual std::string getSugestie() const = 0;
+
+    ~ScriptException() override = default;
 };
-
-
-#endif //OOP_SCRIPTEXCEPTION_H
+#endif

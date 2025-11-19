@@ -18,6 +18,7 @@ public:
     [[nodiscard]] std::string getTip() const override;
 
     void afiseaza(std::ostream& os) const override;
+    void verificaSecuritate() const override;
 };
 
 

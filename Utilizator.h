@@ -29,13 +29,14 @@ public:
     // Operator de atribuire
     Utilizator& operator=(Utilizator sursa);
 
-    void swap(Utilizator& other);
+    void swap(Utilizator& other) noexcept;
 
     // operator<<
     friend std::ostream& operator<<(std::ostream& out, const Utilizator& user);
 
     void adaugaObiect(std::unique_ptr<Seif> itemNou);
-    void stergeObiect(const std::string& platforma, const std::string& username);
+    void stergeObiect(const std::string& eticheta);
+    [[nodiscard]] Seif* getObiectAt(int index) const;
 };
 
 // operator<< pentru Utilizator

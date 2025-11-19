@@ -1,5 +1,8 @@
 #include "Utilizator.h"
 #include "DateAutentificare.h"
+#include "ObiectNegasit.h"
+#include "EroareValidare.h"
+#include "EroareAcces.h"
 
 Utilizator::Utilizator(const Utilizator& sursa) : nume{sursa.nume}, email{sursa.email}, config{sursa.config}
 {
@@ -9,7 +12,7 @@ Utilizator::Utilizator(const Utilizator& sursa) : nume{sursa.nume}, email{sursa.
     }
 }
 
-void Utilizator::swap(Utilizator& other)
+void Utilizator::swap(Utilizator& other) noexcept
 {
     std::swap(nume, other.nume);
     std::swap(email, other.email);
@@ -26,44 +29,43 @@ Utilizator& Utilizator::operator=(Utilizator sursa)
 
 void Utilizator::adaugaObiect(std::unique_ptr<Seif> itemNou)
 {
-    DateAutentificare* cont = dynamic_cast<DateAutentificare*>(itemNou.get()); //dynamic cast
+    // E cont? (validare)
+    DateAutentificare* cont = dynamic_cast<DateAutentificare*>(itemNou.get());
+
     if (cont != nullptr)
     {
+        // Validare parola
         if (cont->getParola().length() < config.getLungimeMinimaParola())
         {
-            std::cout << "[EROARE ADĂUGARE] Cont respins (" << cont->getPlatforma()
-                << "): Parola este prea scurtă.\n";
-
-            return;
+            throw EroareValidare(
+                cont->getPlatforma(),
+                static_cast<int>(cont->getParola().length()),
+                static_cast<int>(config.getLungimeMinimaParola())
+            );
         }
     }
+
+    // Inserare sortata
     std::string etichetaNoua = itemNou->getEticheta();
-
-    int i = 0;
-
+    size_t i = 0;
     while (i < seif.size() && seif[i]->getEticheta() < etichetaNoua)
         i++;
 
-    seif.insert(seif.begin() + i, std::move(itemNou));
+    seif.insert(seif.begin() + static_cast<std::ptrdiff_t>(i), std::move(itemNou));
 }
 
-void Utilizator::stergeObiect(const std::string& platforma, const std::string& username)
+void Utilizator::stergeObiect(const std::string& eticheta)
 {
     for (auto it = seif.begin(); it != seif.end(); ++it)
     {
-        DateAutentificare* cont = dynamic_cast<DateAutentificare*>(it->get());
-
-        if (cont != nullptr)
+        if (it->get()->getEticheta() == eticheta)
         {
-            if (cont->getPlatforma() == platforma && cont->getUtilizator() == username)
-            {
-                std::cout << "[INFO] S-a sters contul: " << platforma << "\n";
-                seif.erase(it);
-                return;
-            }
+            std::cout << "[INFO] S-a sters obiectul: " << eticheta << "\n";
+            seif.erase(it);
+            return;
         }
     }
-    std::cout << "[EROARE] Nu s-a gasit contul " << platforma << " pentru stergere.\n";
+    throw ObiectNegasit("Nu s-a gasit obiectul cu eticheta '" + eticheta + "' pentru stergere.");
 }
 
 std::ostream& operator<<(std::ostream& out, const Utilizator& user)
@@ -94,4 +96,13 @@ std::ostream& operator<<(std::ostream& out, const Utilizator& user)
     }
     out << "======================================================\n";
     return out;
+}
+
+Seif* Utilizator::getObiectAt(int index) const
+{
+    if (index < 0 || index >= static_cast<int>(seif.size()))
+    {
+        throw EroareAcces(index, static_cast<int>(seif.size()));
+    }
+    return seif[index].get();
 }
