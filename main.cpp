@@ -107,11 +107,26 @@ int main()
         std::cout << "Am selectat obiectul: " << obiectGeneric->getEticheta() << "\n";
 
         // Încercăm să facem downcast la DateAutentificare
+        // Încercăm să facem downcast la DateAutentificare
         if (auto* cont = dynamic_cast<DateAutentificare*>(obiectGeneric))
         {
-            // Daca intrăm aici, cast-ul a reușit! Avem acces la cripteaza()
-            std::cout << "Este un cont! Parola curenta: " << cont->getParola() << "\n";
+            std::cout << "Am gasit contul: " << cont->getEticheta() << "\n";
 
+            // [FIX CPPCHECK] Folosim getter-ul neutilizat
+            std::cout << "Utilizator asociat: " << cont->getUtilizator() << "\n";
+
+            std::cout << "Parola in clar: " << cont->getParola() << "\n";
+
+            // [FIX CPPCHECK] Folosim setter-ul neutilizat
+            std::cout << "Testam schimbarea parolei...\n";
+            cont->setter_parola("ParolaNouaForta123!");
+            std::cout << "Parola noua: " << cont->getParola() << "\n";
+
+            // [FIX CPPCHECK] Folosim getConfig (macar il apelam)
+            // (void) spune compilatorului ca ignoram rezultatul, doar vrem sa apelam functia
+            (void)cont->getConfig();
+
+            // Testam criptarea pe noua parola
             cont->CriptareVigenere();
             std::cout << "Dupa criptare: " << cont->getParola() << "\n";
 
