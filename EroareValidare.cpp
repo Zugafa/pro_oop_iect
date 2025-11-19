@@ -1,38 +1,36 @@
 #include "EroareValidare.h"
 
-// Modificăm constructorul pentru a fi mai blând cu stiva
+// Constructor 1 (Lungime)
 EroareValidare::EroareValidare(const std::string& cont, int len, int min)
-    : ScriptException("Eroare validare lungime") // Mesaj scurt inițial
+    : ScriptException("Eroare Validare Lungime"), // <--- TEXT STATIC SCURT
+      numeCont(cont),
+      lungimePrimita(len),
+      lungimeMinima(min),
+      esteEroareContinut(false)
 {
-    // Construim mesajul detaliat AICI, nu în lista de inițializare
-    mesajEroare = "Validare esuata pentru contul '" + cont + "' (Lungime " +
-        std::to_string(len) + " vs " + std::to_string(min) + ").";
-
-    lungimePrimita = len;
-    lungimeMinima = min;
-    esteEroareContinut = false;
 }
 
+// Constructor 2 (Continut)
 EroareValidare::EroareValidare(const std::string& cont, const std::string& motiv)
-    : ScriptException("Eroare validare continut") // Mesaj scurt inițial
+    : ScriptException("Eroare Validare Continut"), // <--- TEXT STATIC SCURT
+      numeCont(cont),
+      lungimePrimita(0),
+      lungimeMinima(0),
+      esteEroareContinut(true)
 {
-    mesajEroare = "Validare esuata pentru contul '" + cont + "': " + motiv;
-
-    lungimePrimita = 0;
-    lungimeMinima = 0;
-    esteEroareContinut = true;
 }
 
 std::string EroareValidare::getSugestie() const
 {
     if (esteEroareContinut)
-    {
-        return "Asigura-te ca parola contine cel putin o litera mare (A-Z) si un caracter special (!@#...).";
-    }
+        return "La contul '" + numeCont +
+            "': Asigura-te ca parola contine cel putin o litera mare si un caracter special.";
+
     else
     {
         int diferenta = lungimeMinima - lungimePrimita;
-        return "Parola este prea scurta. Mai adauga cel putin " +
-            std::to_string(diferenta) + " caractere.";
+        return "La contul '" + numeCont + "': Parola este prea scurta (" +
+            std::to_string(lungimePrimita) + " vs " + std::to_string(lungimeMinima) +
+            "). Mai adauga " + std::to_string(diferenta) + " caractere.";
     }
 }

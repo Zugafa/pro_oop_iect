@@ -6,6 +6,8 @@
 class EroareValidare : public ScriptException
 {
 private:
+    std::string numeCont;
+
     int lungimePrimita;
     int lungimeMinima;
     bool esteEroareContinut;
