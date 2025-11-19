@@ -30,7 +30,8 @@ Utilizator& Utilizator::operator=(Utilizator sursa)
 void Utilizator::adaugaObiect(std::unique_ptr<Seif> itemNou)
 {
     // E cont? (validare)
-    const DateAutentificare* cont = dynamic_cast<const DateAutentificare*>(itemNou.get());
+    DateAutentificare* cont = dynamic_cast<DateAutentificare*>(itemNou.get());
+
     if (cont != nullptr)
     {
         // Validare parola
