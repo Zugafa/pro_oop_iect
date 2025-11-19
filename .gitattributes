@@ -1,18 +1,18 @@
 ext/** linguist-vendored
 
 # Ignoră CMake
-CMakeLists.txt linguist-vendored
-cmake/** linguist-vendored
-*.cmake linguist-vendored
+#CMakeLists.txt linguist-vendored
+#cmake/** linguist-vendored
+#*.cmake linguist-vendored
 
 # Ignoră Scripturi Shell / Command
-*.sh linguist-vendored
-*.command linguist-vendored
-launcher.command linguist-vendored
+#*.sh linguist-vendored
+#*.command linguist-vendored
+#launcher.command linguist-vendored
 
 # Ignoră fișiere de configurare Visual Studio / Props
-*.props linguist-vendored
-disable_modules.props linguist-vendored
+#*.props linguist-vendored
+#disable_modules.props linguist-vendored
 
 # Ignoră fișiere text
 *.txt linguist-vendored
