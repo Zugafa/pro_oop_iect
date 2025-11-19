@@ -15,7 +15,7 @@ public:
     EroareValidare(const std::string& cont, int len, int min);
 
     // Constructor pentru erori de continut
-    EroareValidare(const std::string& cont);
+    EroareValidare(const std::string& cont, const std::string& motiv);
 
     [[nodiscard]] std::string getSugestie() const override;
 };

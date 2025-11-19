@@ -153,7 +153,7 @@ int main()
     {
         for (int i = 0; i < Seif::getNumarObiecteTotale(); ++i)
         {
-            Seif* item = user.getObiectAt(i);
+            const Seif* item = user.getObiectAt(i);
             // Polimorfismul va alege funcția corectă pentru Cont, Card sau Identitate
             item->verificaSecuritate();
         }
