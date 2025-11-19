@@ -11,7 +11,7 @@ EroareValidare::EroareValidare(const std::string& cont, int len, int min)
 }
 
 // Constructor 2 (Continut)
-EroareValidare::EroareValidare(const std::string& cont, const std::string& motiv)
+EroareValidare::EroareValidare(const std::string& cont)
     : ScriptException("Eroare Validare Continut"), // <--- TEXT STATIC SCURT
       numeCont(cont),
       lungimePrimita(0),

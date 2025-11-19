@@ -48,7 +48,7 @@ void DateAutentificare::setter_parola(const std::string& nouaParola)
         std::cout << "[INFO] Parola a fost setata cu succes pentru " << this->numePlatforma << "!\n";
         return;
     }
-    throw EroareValidare(numePlatforma, "Lipsesc caractere obligatorii (Majuscula/Simbol).");
+    throw EroareValidare(numePlatforma);
 }
 
 void DateAutentificare::CriptareVigenere()
