@@ -1,36 +1,36 @@
+//
+// Created by nitui on 11/19/2025.
+//
+
 #include "EroareValidare.h"
 
-// Constructor 1 (Lungime)
-EroareValidare::EroareValidare(const std::string& cont, int len, int min)
-    : ScriptException("Eroare Validare Lungime"), // <--- TEXT STATIC SCURT
-      numeCont(cont),
-      lungimePrimita(len),
-      lungimeMinima(min),
-      esteEroareContinut(false)
+EroareValidare::EroareValidare(const std::string& cont, int len, int min) : ScriptException(
+                                                                                "Validare esuata pentru contul '" + cont
+                                                                                + "' (Lungime)."),
+                                                                            lungimePrimita(len),
+                                                                            lungimeMinima(min),
+                                                                            esteEroareContinut(false)
 {
 }
 
-// Constructor 2 (Continut)
-EroareValidare::EroareValidare(const std::string& cont)
-    : ScriptException("Eroare Validare Continut"), // <--- TEXT STATIC SCURT
-      numeCont(cont),
-      lungimePrimita(0),
-      lungimeMinima(0),
-      esteEroareContinut(true)
+EroareValidare::EroareValidare(const std::string& cont, const std::string& motiv) : ScriptException(
+        "Validare esuata pentru contul '" + cont + "': " + motiv),
+    lungimePrimita(0),
+    lungimeMinima(0),
+    esteEroareContinut(true)
 {
 }
 
 std::string EroareValidare::getSugestie() const
 {
     if (esteEroareContinut)
-        return "La contul '" + numeCont +
-            "': Asigura-te ca parola contine cel putin o litera mare si un caracter special.";
-
+    {
+        return "Asigura-te ca parola contine cel putin o litera mare (A-Z) si un caracter special (!@#...).";
+    }
     else
     {
         int diferenta = lungimeMinima - lungimePrimita;
-        return "La contul '" + numeCont + "': Parola este prea scurta (" +
-            std::to_string(lungimePrimita) + " vs " + std::to_string(lungimeMinima) +
-            "). Mai adauga " + std::to_string(diferenta) + " caractere.";
+        return "Parola este prea scurta. Mai adauga cel putin " +
+            std::to_string(diferenta) + " caractere.";
     }
 }
