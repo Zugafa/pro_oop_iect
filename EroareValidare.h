@@ -9,6 +9,7 @@ private:
     int lungimePrimita;
     int lungimeMinima;
     bool esteEroareContinut;
+    std::string cont, motiv;
 
 public:
     // Constructor pentru erori de lungime

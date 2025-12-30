@@ -19,11 +19,7 @@ void NotitaSecurizata::afiseaza(std::ostream& os) const
 void NotitaSecurizata::verificaSecuritate() const
 {
     if (notita.empty())
-    {
         std::cout << "[INFO] Notita '" << getEticheta() << "' este goala.\n";
-    }
     else
-    {
         std::cout << "[LOCKED] Notita '" << getEticheta() << "' contine date criptate.\n";
-    }
 }

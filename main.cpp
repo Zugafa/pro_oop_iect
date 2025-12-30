@@ -28,7 +28,7 @@ int main()
     std::cout << "==================================================\n\n";
 
     // 0. TESTARE STATIC (La început, ar trebui să fie 0)
-    std::cout << "[STATIC] Numar obiecte in memorie (Start): "
+    std::cout << "[STATIC] Numar obiecte in memorie (start): "
         << Seif::getNumarObiecteTotale() << "\n\n";
 
     // 2. Configurare inițială
@@ -75,7 +75,7 @@ int main()
     }
 
     // -----------------------------------------------------------
-    // TEST 2: EXCEPȚII "SMART" (EroareValidare)
+    // TEST 2: EXCEPȚII (EroareValidare)
     // -----------------------------------------------------------
     std::cout << "\n--- [2] Testare Validare Parola (Exceptie) ---\n";
     try
@@ -91,7 +91,7 @@ int main()
     {
         // Prindem excepția prin referință la bază
         std::cout << "[PRINS!] " << e.what() << "\n";
-        // Aici vedem "inteligența" excepției (calculul matematic)
+        // Aici vedem partea de calcul a excepției
         std::cout << "[SUGESTIE] " << e.getSugestie() << "\n";
     }
 
@@ -106,7 +106,6 @@ int main()
 
         std::cout << "Am selectat obiectul: " << obiectGeneric->getEticheta() << "\n";
 
-        // Încercăm să facem downcast la DateAutentificare
         // Încercăm să facem downcast la DateAutentificare
         if (auto* cont = dynamic_cast<DateAutentificare*>(obiectGeneric))
         {

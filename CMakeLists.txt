@@ -72,6 +72,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         ObiectNegasit.h
         EroareAcces.cpp
         EroareAcces.h
+        Manager.cpp
+        Manager.h
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )
