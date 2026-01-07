@@ -1,0 +1,32 @@
+#ifndef OOP_CONFIGURATIE_H
+#define OOP_CONFIGURATIE_H
+#include <iostream>
+#include <string>
+
+
+class Configuratie
+{
+    std::string cheieVigenere, caractereSpecialeValide;
+    std::size_t lungimeMinimaParola;
+    Configuratie();
+    Configuratie(const Configuratie&) = delete;
+    Configuratie& operator=(const Configuratie&) = delete;
+
+public:
+    static Configuratie& getInstance();
+    // Gettere const
+    [[nodiscard]] const std::string& getCheieVigenere() const { return cheieVigenere; }
+    [[nodiscard]] const std::string& getCaractereSpecialeValide() const { return caractereSpecialeValide; }
+    [[nodiscard]] std::size_t getLungimeMinimaParola() const { return lungimeMinimaParola; }
+
+    ~Configuratie() = default;
+
+    // operator<<
+    friend std::ostream& operator<<(std::ostream& out, const Configuratie& config);
+};
+
+// operator<< pentru Configuratie
+std::ostream& operator<<(std::ostream& out, const Configuratie& config);
+
+
+#endif //OOP_CONFIGURATIE_H
