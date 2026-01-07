@@ -27,6 +27,11 @@ Utilizator& Utilizator::operator=(Utilizator sursa)
 }
 
 
+bool Utilizator::verificaParola(const std::string& parola) const
+{
+    return parola == parolaMaster;
+}
+
 void Utilizator::adaugaObiect(std::unique_ptr<Seif> itemNou)
 {
     // E cont? (validare)

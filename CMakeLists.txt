@@ -74,6 +74,10 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         EroareAcces.h
         Manager.cpp
         Manager.h
+        GestionarParole.cpp
+        GestionarParole.h
+        SeifFactory.cpp
+        SeifFactory.h
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )

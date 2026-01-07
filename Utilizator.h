@@ -4,20 +4,19 @@
 #include "Seif.h"
 #include <vector>
 #include <memory>
-// -------------------------------------------------------------
-// CLASA Utilizator (Clasa #2, Compunere)
-// -------------------------------------------------------------
+
 class Utilizator
 {
 private:
-    std::string nume, email;
+    std::string nume, email, parolaMaster;
     std::vector<std::unique_ptr<Seif>> seif;
     Configuratie config; // Compunere
 
 public:
     // Constructor de initializare
-    explicit Utilizator(const std::string& n, const std::string& e, const Configuratie& configExterna)
-        : nume{n}, email{e}, config{configExterna}
+    explicit Utilizator(const std::string& n, const std::string& e, const std::string& pw,
+                        const Configuratie& configExterna)
+        : nume{n}, email{e}, config{configExterna}, parolaMaster{pw}
     {
     }
 
@@ -33,6 +32,11 @@ public:
 
     // operator<<
     friend std::ostream& operator<<(std::ostream& out, const Utilizator& user);
+
+    std::string getNume() const { return nume; }
+    std::string getEmail() const { return email; }
+
+    [[nodiscard]] bool verificaParola(const std::string& parola) const;
 
     void adaugaObiect(std::unique_ptr<Seif> itemNou);
     void stergeObiect(const std::string& eticheta);

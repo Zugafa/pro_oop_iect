@@ -1,7 +1,3 @@
-//
-// Created by nitui on 11/2/2025.
-//
-
 #include "Configuratie.h"
 #include <iostream>
 
@@ -9,6 +5,12 @@ Configuratie::Configuratie() : cheieVigenere{"ENCRYPTER"},
                                caractereSpecialeValide{"!@#$%^&*"},
                                lungimeMinimaParola{8u}
 {
+}
+
+Configuratie& Configuratie::getInstance()
+{
+    static Configuratie instance;
+    return instance;
 }
 
 std::ostream& operator<<(std::ostream& out, const Configuratie& config)

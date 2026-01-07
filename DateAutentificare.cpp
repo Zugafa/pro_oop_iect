@@ -8,31 +8,28 @@
 // IMPLEMENTARE CONSTRUCTOR (4 Argumente)
 DateAutentificare::DateAutentificare(const std::string& nPlat,
                                      const std::string& nUtiliz,
-                                     const std::string& pass,
-                                     const Configuratie& configExterna)
+                                     const std::string& pass)
     : Seif{nPlat},
       numePlatforma{nPlat},
       numeUtilizator{nUtiliz},
-      parola{pass},
-      config{configExterna}
+      parola{pass}
 {
 }
 
 void DateAutentificare::setter_parola(const std::string& nouaParola)
 {
-    // Folosim obiectul 'config'
-    if (nouaParola.length() < config.getLungimeMinimaParola())
+    if (nouaParola.length() < Configuratie::getInstance().getLungimeMinimaParola())
     {
         throw EroareValidare(
             numePlatforma,
             static_cast<int>(nouaParola.length()),
-            static_cast<int>(config.getLungimeMinimaParola())
+            static_cast<int>(Configuratie::getInstance().getLungimeMinimaParola())
         );
     }
 
     bool areLiteraMare = false;
     bool areCaracterSpecial = false;
-    std::string caractereValide = config.getCaractereSpecialeValide();
+    std::string caractereValide = Configuratie::getInstance().getCaractereSpecialeValide();
 
     for (const auto& litera : nouaParola)
     {
@@ -53,7 +50,7 @@ void DateAutentificare::setter_parola(const std::string& nouaParola)
 
 void DateAutentificare::CriptareVigenere()
 {
-    std::string Cheie = config.getCheieVigenere();
+    std::string Cheie = Configuratie::getInstance().getCheieVigenere();
     int pozCheie = 0;
     const int lenCheie = static_cast<int>(Cheie.length());
     for (auto& literaParola : parola)
@@ -70,7 +67,7 @@ void DateAutentificare::CriptareVigenere()
 
 void DateAutentificare::deCriptareVigenere()
 {
-    std::string Cheie = config.getCheieVigenere();
+    std::string Cheie = Configuratie::getInstance().getCheieVigenere();
     int pozCheie = 0, lenCheie = static_cast<int>(Cheie.length());
     for (auto& literaParola : parola)
     {
