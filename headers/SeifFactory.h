@@ -10,15 +10,13 @@ class SeifFactory
 {
 private:
     SeifFactory() = default;
-
+public:
     SeifFactory(const SeifFactory&) = delete;
     SeifFactory& operator=(const SeifFactory&) = delete;
-
-public:
     static SeifFactory& getInstance();
 
-    [[nodiscard]] std::shared_ptr<Seif> creeazaSeif(const std::string& tip,
-                                                    const std::map<std::string, std::string>& date);
+    [[nodiscard]] static std::shared_ptr<Seif> creeazaSeif(const std::string& tip,
+                                                           const std::map<std::string, std::string>& date);
 };
 
 #endif

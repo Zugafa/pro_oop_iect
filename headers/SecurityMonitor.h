@@ -13,7 +13,7 @@ class SecurityMonitor : public Observer {
 public:
     explicit SecurityMonitor(Utilizator& u);
     void update() override;
-    const std::vector<std::string>& getAlerte() const { return alerte; }
+    [[nodiscard]] const std::vector<std::string>& getAlerte() const { return alerte; }
 };
 
 

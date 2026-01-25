@@ -22,11 +22,11 @@ public:
 
 
     void set_nume(const std::string& nume);
-    void set_prenume(const std::string& prenume);
-    void set_telefon(const std::string& telefon);
-    void set_email(const std::string& email);
+    void set_prenume(const std::string& prenumeNou);
+    void set_telefon(const std::string& telefonNou);
+    void set_email(const std::string& emailNou);
     void set_strada(const std::string& strada);
-    void set_oras(const std::string& oras);
+    void set_oras(const std::string& orasNou);
     void set_judet(const std::string& judet);
     void set_tara(const std::string& tara);
     void set_cod_postal(const std::string& cod_postal);

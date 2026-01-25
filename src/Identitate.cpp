@@ -38,44 +38,44 @@ void Identitate::verificaSecuritate() const
         << telefon << ") sunt actualizate.\n";
 }
 
-void Identitate::set_nume(const std::string& nume)
+void Identitate::set_nume(const std::string& numeNou)
 {
-    this->nume = nume;
+    nume = numeNou;
 }
 
-void Identitate::set_prenume(const std::string& prenume)
+void Identitate::set_prenume(const std::string& prenumeNou)
 {
-    this->prenume = prenume;
+    prenume = prenumeNou;
 }
 
-void Identitate::set_telefon(const std::string& telefon)
+void Identitate::set_telefon(const std::string& telefonNou)
 {
-    this->telefon = telefon;
+    telefon = telefonNou;
 }
 
-void Identitate::set_email(const std::string& email)
+void Identitate::set_email(const std::string& emailNou)
 {
-    this->email = email;
+    email = emailNou;
 }
 
-void Identitate::set_strada(const std::string& strada)
+void Identitate::set_strada(const std::string& stradaNoua)
 {
-    this->strada = strada;
+    strada = stradaNoua;
 }
 
-void Identitate::set_oras(const std::string& oras)
+void Identitate::set_oras(const std::string& orasNou)
 {
-    this->oras = oras;
+    oras = orasNou;
 }
 
-void Identitate::set_judet(const std::string& judet)
+void Identitate::set_judet(const std::string& judetNou)
 {
-    this->judet = judet;
+    judet = judetNou;
 }
 
-void Identitate::set_tara(const std::string& tara)
+void Identitate::set_tara(const std::string& taraNoua)
 {
-    this->tara = tara;
+    tara = taraNoua;
 }
 
 void Identitate::set_cod_postal(const std::string& cod_postal)

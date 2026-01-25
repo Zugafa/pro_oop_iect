@@ -20,5 +20,6 @@ int Seif::getNumarObiecteTotale()
 const std::string& Seif::getEticheta() const
 { return eticheta; }
 
-void Seif::setEticheta(const std::string& eticheta)
-{ this->eticheta = eticheta; }
+void Seif::setEticheta(const std::string& nouaEticheta) {
+    eticheta = nouaEticheta;
+}

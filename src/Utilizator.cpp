@@ -41,7 +41,7 @@ void Utilizator::adaugaObiect(std::shared_ptr<Seif> itemNou)
     if (cont != nullptr)
     {
         // Validare parola
-        auto& config = Configuratie::getInstance();
+        const auto& config = Configuratie::getInstance();
         if (cont->getParola().length() < config.getLungimeMinimaParola())
         {
             throw EroareValidare(

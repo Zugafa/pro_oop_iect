@@ -43,7 +43,7 @@ void GestionarParole::salveazaDatelePeDisc() const
 
     size_t total = user_curent->getNrObiecte();
     for(size_t i = 0; i < total; ++i) {
-        Seif* item = user_curent->getObiectAt(i);
+        Seif* item = user_curent->getObiectAt(static_cast<int>(i));
         auto date = item->getDatePentruSalvare();
 
         // Construim șirul de date
@@ -60,8 +60,8 @@ void GestionarParole::salveazaDatelePeDisc() const
 
         // --- FIX: Scriem LUNGIMEA (int) urmată de DATE ---
         int len = static_cast<int>(linie.size());
-        out.write(reinterpret_cast<const char*>(&len), sizeof(len)); // Scriem 4 bytes pentru lungime
-        out.write(linie.c_str(), len);                               // Scriem datele criptate
+        out.write(reinterpret_cast<const char*>(&len), sizeof(len));
+        out.write(linie.c_str(), len);
     }
     out.close();
     std::cout << "[SYSTEM] Date salvate binar in vault.dat\n";

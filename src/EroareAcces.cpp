@@ -1,7 +1,3 @@
-//
-// Created by nitui on 11/19/2025.
-//
-
 #include "EroareAcces.h"
 
 EroareAcces::EroareAcces(int index, int max) : ScriptException("Eroare de acces la memorie (Index Out of Bounds)."),

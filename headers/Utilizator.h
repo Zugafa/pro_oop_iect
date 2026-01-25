@@ -31,9 +31,8 @@ public:
 
     friend std::ostream& operator<<(std::ostream& out, const Utilizator& user);
 
-    [[nodiscard]] std::string getNume() const { return nume; }
-    [[nodiscard]] std::string getEmail() const { return email; }
-
+    [[nodiscard]] const std::string& getNume() const { return nume; }
+    [[nodiscard]] const std::string& getEmail() const { return email; }
     [[nodiscard]] bool verificaParola(const std::string& parola) const;
 
     void adaugaObiect(std::shared_ptr<Seif> itemNou);

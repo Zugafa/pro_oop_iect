@@ -22,7 +22,7 @@ void SecurityMonitor::update() {
         if (!item) continue; // Protecție extra
 
         // 1. Verificare Parole (DateAutentificare)
-        if (auto* cont = dynamic_cast<DateAutentificare*>(item)) {
+        if (const auto* cont = dynamic_cast<DateAutentificare*>(item)) {
             // Verificăm lungimea parolei
             if (cont->getParola().length() < 12) {
                 alerte.push_back("[WARN] Parola contului '" + cont->getEticheta() + "' este slabă (<12 caractere).");

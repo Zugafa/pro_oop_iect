@@ -9,10 +9,10 @@ class Configuratie
     std::string cheieVigenere, caractereSpecialeValide;
     std::size_t lungimeMinimaParola;
     Configuratie();
-    Configuratie(const Configuratie&) = delete;
-    Configuratie& operator=(const Configuratie&) = delete;
 
 public:
+    Configuratie(const Configuratie&) = delete;
+    Configuratie& operator=(const Configuratie&) = delete;
     static Configuratie& getInstance();
     // Gettere const
     [[nodiscard]] const std::string& getCheieVigenere() const { return cheieVigenere; }
