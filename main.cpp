@@ -95,8 +95,6 @@ int main()
         sf::Texture logoTex;
         if (!logoTex.loadFromFile("images/logo.png")) {
              std::cout << "[WARN] NU s-a gasit imaginea 'images/logo.png'. Copiaz-o langa exe!\n";
-        } else {
-             std::cout << "[INFO] Logo incarcat. Dimensiuni: " << logoTex.getSize().x << "x" << logoTex.getSize().y << "\n";
         }
         logoTex.setSmooth(true);
 
