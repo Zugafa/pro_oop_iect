@@ -58,25 +58,43 @@ endif()
 # NOTE: update executable name in .github/workflows/cmake.yml:25 when changing name here
 add_executable(${MAIN_EXECUTABLE_NAME}
         main.cpp
-        CardBancar.cpp CardBancar.h
-        Configuratie.cpp Configuratie.h
-        DateAutentificare.cpp DateAutentificare.h
-        EroareAcces.cpp EroareAcces.h
-        EroareValidare.cpp EroareValidare.h
-        GestionarParole.cpp GestionarParole.h
-        Identitate.cpp Identitate.h
-        Manager.cpp Manager.h
-        NotitaSecurizata.cpp NotitaSecurizata.h
-        ObiectNegasit.cpp ObiectNegasit.h
-        ScriptException.cpp ScriptException.h
-        Seif.cpp Seif.h
-        SeifFactory.cpp SeifFactory.h
-        Utilizator.cpp Utilizator.h
-        ResourceManager.cpp ResourceManager.hpp
+        src/CardBancar.cpp
+        src/Configuratie.cpp
+        src/DateAutentificare.cpp
+        src/EroareAcces.cpp
+        src/EroareValidare.cpp
+        src/GestionarParole.cpp
+        src/Identitate.cpp
+        src/Manager.cpp
+        src/NotitaSecurizata.cpp
+        src/ObiectNegasit.cpp
+        src/Observer.cpp
+        src/ScriptException.cpp
+        src/Seif.cpp
+        src/SeifFactory.cpp
+        src/Utilizator.cpp
+        src/ResourceManager.cpp
+        src/SecurityMonitor.cpp
+
+        headers/CardBancar.h
+        headers/Configuratie.h
+        headers/DateAutentificare.h
+        headers/EroareAcces.h
+        headers/EroareValidare.h
+        headers/GestionarParole.h
+        headers/Identitate.h
+        headers/Manager.h
+        headers/NotitaSecurizata.h
+        headers/ObiectNegasit.h
+        headers/Observer.h
+        headers/ScriptException.h
+        headers/Seif.h
+        headers/SeifFactory.h
+        headers/Utilizator.h
+        headers/ResourceManager.hpp
+        headers/SecurityMonitor.h
+
         generated/src/Helper.cpp
-        Observer.cpp
-        Observer.h
-        SecurityMonitor.cpp SecurityMonitor.h
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )
@@ -91,6 +109,8 @@ set_compiler_flags(RUN_SANITIZERS TRUE TARGET_NAMES ${MAIN_EXECUTABLE_NAME})
 # use SYSTEM so cppcheck and clang-tidy do not report warnings from these directories
 target_include_directories(${MAIN_EXECUTABLE_NAME} SYSTEM PRIVATE generated/include)
 # target_include_directories(${MAIN_EXECUTABLE_NAME} SYSTEM PRIVATE ext/<SomeHppLib>/include)
+target_include_directories(${MAIN_EXECUTABLE_NAME} PRIVATE headers)
+
 target_include_directories(${MAIN_EXECUTABLE_NAME} SYSTEM PRIVATE ${SFML_SOURCE_DIR}/include)
 target_link_directories(${MAIN_EXECUTABLE_NAME} PRIVATE ${SFML_BINARY_DIR}/lib)
 target_link_libraries(${MAIN_EXECUTABLE_NAME} PRIVATE SFML::Graphics SFML::Window SFML::System Threads::Threads)

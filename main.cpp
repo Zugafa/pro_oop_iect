@@ -10,14 +10,14 @@
 #include <windows.h>
 #endif
 
-#include "GestionarParole.h"
-#include "ResourceManager.hpp"
-#include "Configuratie.h"
-#include "DateAutentificare.h"
-#include "CardBancar.h"
-#include "NotitaSecurizata.h"
-#include "Identitate.h"
-#include "SecurityMonitor.h"
+#include "headers/GestionarParole.h"
+#include "headers/ResourceManager.hpp"
+#include "headers/Configuratie.h"
+#include "headers/DateAutentificare.h"
+#include "headers/CardBancar.h"
+#include "headers/NotitaSecurizata.h"
+#include "headers/Identitate.h"
+#include "headers/SecurityMonitor.h"
 
 // --- Funcție Șablon ---
 template <typename T, typename Colectie>
