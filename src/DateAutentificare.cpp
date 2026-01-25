@@ -21,13 +21,13 @@ DateAutentificare::DateAutentificare(const std::string& eticheta_,
 
 // Constructorul folosit de SeifFactory (din map)
 DateAutentificare::DateAutentificare(const std::map<std::string, std::string>& date)
-    : Seif(date.at("num")),
-      utilizator(date.at("user")),
-      parola(date.at("pass")),
+    : Seif(date.at("platforma")),
+      utilizator(date.at("utilizator")),
+      parola(date.at("parola")),
       url(date.at("url")),
       note(date.at("note"))
 {
-    numePlatforma = date.at("num");
+    numePlatforma = date.at("platforma");
 }
 
 void DateAutentificare::setEticheta(const std::string& etichetaNoua)
@@ -70,6 +70,14 @@ void DateAutentificare::setter_parola(const std::string& nouaParola)
 void DateAutentificare::setter_numeUtilizator(const std::string& nouNume)
 {
     this->utilizator = nouNume;
+}
+
+void DateAutentificare::setter_url(const std::string& url_) {
+    url = url_;
+}
+
+void DateAutentificare::setter_note(const std::string& note_) {
+    note = note_;
 }
 
 void DateAutentificare::CriptareVigenere()
@@ -119,5 +127,7 @@ std::map<std::string, std::string> DateAutentificare::getDatePentruSalvare() con
     date["platforma"] = getEticheta();
     date["utilizator"] = utilizator;
     date["parola"] = parola;
+    date["url"] = url;
+    date["note"] = note;
     return date;
 }

@@ -10,14 +10,14 @@
 #include <windows.h>
 #endif
 
-#include "headers/GestionarParole.h"
-#include "headers/ResourceManager.hpp"
-#include "headers/Configuratie.h"
-#include "headers/DateAutentificare.h"
-#include "headers/CardBancar.h"
-#include "headers/NotitaSecurizata.h"
-#include "headers/Identitate.h"
-#include "headers/SecurityMonitor.h"
+#include "GestionarParole.h"
+#include "ResourceManager.hpp"
+#include "Configuratie.h"
+#include "DateAutentificare.h"
+#include "CardBancar.h"
+#include "NotitaSecurizata.h"
+#include "Identitate.h"
+#include "SecurityMonitor.h"
 
 // --- Funcție Șablon ---
 template <typename T, typename Colectie>
@@ -38,14 +38,15 @@ T* gasesteDupaNume(Colectie& colectie, const std::string& cautat)
 }
 
 // --- CONSTANTE DE DESIGN ---
-const sf::Color CLR_NAVY(5, 15, 35);
-const sf::Color CLR_ACCENT(0, 106, 255);
-const sf::Color CLR_BG(245, 246, 248);
-const sf::Color CLR_ERR(220, 53, 69);
-const sf::Color CLR_SELECT(0, 106, 255, 100);
-const float SIDE_W = 240.f;
+constexpr sf::Color CLR_NAVY(5, 15, 35);
+constexpr sf::Color CLR_ACCENT(0, 106, 255);
+constexpr sf::Color CLR_BG(245, 246, 248);
+constexpr sf::Color CLR_ERR(220, 53, 69);
+constexpr sf::Color CLR_SELECT(0, 106, 255, 100);
+constexpr float SIDE_W = 240.f;
 
 enum class AppState { Vault, Edit, Add };
+
 enum class Category { Accounts, Identities, Cards, Notes, Security };
 
 // Utilitare conversie String <-> UTF8
@@ -93,21 +94,22 @@ int main()
 
         // --- SETUP LOGO START ---
         sf::Texture logoTex;
-        if (!logoTex.loadFromFile("images/logo.png")) {
-             std::cout << "[WARN] NU s-a gasit imaginea 'images/logo.png'. Copiaz-o langa exe!\n";
+        if (!logoTex.loadFromFile("images/logo.png"))
+        {
+            std::cout << "[WARN] NU s-a gasit imaginea 'images/logo.png'. Copiaz-o langa exe!\n";
         }
         logoTex.setSmooth(true);
 
         sf::Sprite logoSprite(logoTex);
 
         // MĂRIMEA DORITĂ (90px)
-        float targetHeight = 110.f;
+        float targetHeight = 120.f;
         float texH = static_cast<float>(logoTex.getSize().y);
         float scaleFactor = targetHeight / (texH > 0 ? texH : 1.f);
 
         // SFML 3.0: Folosim acolade pentru Vector2f
         logoSprite.setScale({scaleFactor, scaleFactor});
-        logoSprite.setPosition({25.f, 25.f});
+        logoSprite.setPosition({-5.f, 25.f});
 
         // Textul de langa logo
         sf::Text logoText = createUtf8Text("S.C.R.I.P.T", font, 18, sf::Color::White);
@@ -136,7 +138,9 @@ int main()
 
                 if (u->getNrObiecte() == 0)
                 {
-                    u->adaugaObiect(std::make_shared<DateAutentificare>("Facebook", "andrei.nituică", "ParolăValidă123!","https://www.facebook.com/","Cont principal"));
+                    u->adaugaObiect(std::make_shared<DateAutentificare>("Facebook", "andrei.nituică",
+                                                                        "ParolăValidă123!", "https://www.facebook.com/",
+                                                                        "Cont principal"));
                     u->adaugaObiect(std::make_shared<CardBancar>("Revolut", "4556 1234 5678 0000", "12/28", "123"));
                     u->adaugaObiect(std::make_shared<NotitaSecurizata>("Cod Poartă", "Acces: 9988#"));
                     u->adaugaObiect(std::make_shared<Identitate>("Acasă", "Nițuică", "Andrei", "0720x", "a@m.ro",
@@ -152,6 +156,7 @@ int main()
         AppState appState = AppState::Vault;
         Category currentCat = Category::Accounts;
         Seif* activeItem = nullptr;
+        float scrollOffset = 0.f;
 
         std::map<std::string, sf::String> buffers;
         std::map<std::string, size_t> cursors, anchors;
@@ -161,6 +166,7 @@ int main()
 
         while (window.isOpen())
         {
+            bool triggerSave = false;
             sf::Vector2f mPos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
             bool click = false, dblClick = false;
 
@@ -172,6 +178,12 @@ int main()
 
             while (const std::optional<sf::Event> event = window.pollEvent())
             {
+                if (const auto* scroll = event->getIf<sf::Event::MouseWheelScrolled>())
+                {
+                    if (scroll->wheel == sf::Mouse::Wheel::Vertical && appState == AppState::Vault)
+                        scrollOffset -= scroll->delta * 25.f;
+                }
+
                 if (event->is<sf::Event::Closed>()) window.close();
 
                 if (appState != AppState::Vault)
@@ -194,17 +206,24 @@ int main()
                         if (key->code == sf::Keyboard::Key::Tab)
                         {
                             std::vector<std::string> order = {"eticheta"};
-                            if (currentCat == Category::Accounts) order.insert(order.end(), {"user", "pass"});
+                            if (currentCat == Category::Accounts)
+                                order.insert(
+                                    order.end(), {"user", "pass", "url", "note"});
                             else if (currentCat == Category::Cards) order.insert(order.end(), {"num", "exp", "cvv"});
                             else if (currentCat == Category::Identities)
                                 order.insert(order.end(), {"fn", "ln", "tel", "em", "str", "ors", "jud", "tar", "cp"});
                             else if (currentCat == Category::Notes) order.push_back("note");
 
-                            auto it = std::find(order.begin(), order.end(), focusKey);
+                            auto it = std::ranges::find(order, focusKey);
                             focusKey = (it != order.end())
                                            ? order[(std::distance(order.begin(), it) + 1) % order.size()]
                                            : order[0];
                             cursors[focusKey] = anchors[focusKey] = buffers[focusKey].getSize();
+                        }
+
+                        if (key->code == sf::Keyboard::Key::Enter && appState != AppState::Vault)
+                        {
+                            triggerSave = true;
                         }
 
                         if (!focusKey.empty())
@@ -325,6 +344,7 @@ int main()
                     cursors.clear();
                     anchors.clear();
                     showPass = false;
+                    scrollOffset = 0.f;
 
                     if (currentCat == Category::Security && app.getUserCrt())
                     {
@@ -348,10 +368,14 @@ int main()
                 title.setPosition({SIDE_W + 30, 30});
                 window.draw(title);
 
-                float cy = 100.f;
-
                 if (app.getUserCrt())
                 {
+                    float totalContentHeight = app.getUserCrt()->getNrObiecte() * 85.f;
+                    float maxScroll = std::max(0.f, totalContentHeight - 650.f);
+                    if (scrollOffset < 0) scrollOffset = 0;
+                    if (scrollOffset > maxScroll) scrollOffset = maxScroll;
+
+                    float cy = 100.f - scrollOffset;
                     if (currentCat == Category::Security)
                     {
                         sf::Text info = createUtf8Text("Real-time analysis of your vault:", font, 18,
@@ -392,43 +416,57 @@ int main()
 
                                 if (match)
                                 {
-                                    sf::RectangleShape card({800, 75});
-                                    card.setPosition({SIDE_W + 30, cy});
-                                    card.setFillColor(sf::Color::White);
-
-                                    if (click && card.getGlobalBounds().contains(mPos))
+                                    if (cy > 50.f && cy < 800.f)
                                     {
-                                        activeItem = itm;
-                                        appState = AppState::Edit;
-                                        buffers.clear(); cursors.clear(); anchors.clear();
-                                        focusKey = "eticheta";
-                                        buffers["eticheta"] = toSfStr(itm->getEticheta());
+                                        sf::RectangleShape card({800, 75});
+                                        card.setPosition({SIDE_W + 30, cy});
+                                        card.setFillColor(sf::Color::White);
 
-                                        if (auto* da = dynamic_cast<DateAutentificare*>(itm)) {
-                                            buffers["user"] = toSfStr(da->getUtilizator());
-                                            buffers["pass"] = toSfStr(da->getParola());
-                                        } else if (auto* cb = dynamic_cast<CardBancar*>(itm)) {
-                                            buffers["num"] = toSfStr(cb->getNumar());
-                                            buffers["exp"] = toSfStr(cb->getDataExp());
-                                            buffers["cvv"] = toSfStr(cb->getCVV());
-                                        } else if (auto* ns = dynamic_cast<NotitaSecurizata*>(itm)) {
-                                            buffers["note"] = toSfStr(ns->getNotita());
-                                        } else if (auto* id = dynamic_cast<Identitate*>(itm)) {
-                                            buffers["fn"] = toSfStr(id->get_prenume());
-                                            buffers["ln"] = toSfStr(id->get_nume());
-                                            buffers["tel"] = toSfStr(id->get_telefon());
-                                            buffers["em"] = toSfStr(id->get_email());
-                                            buffers["str"] = toSfStr(id->get_strada());
-                                            buffers["ors"] = toSfStr(id->get_oras());
-                                            buffers["jud"] = toSfStr(id->get_judet());
-                                            buffers["tar"] = toSfStr(id->get_tara());
-                                            buffers["cp"] = toSfStr(id->get_cod_postal());
+                                        if (click && card.getGlobalBounds().contains(mPos))
+                                        {
+                                            activeItem = itm;
+                                            appState = AppState::Edit;
+                                            buffers.clear();
+                                            cursors.clear();
+                                            anchors.clear();
+                                            focusKey = "eticheta";
+                                            buffers["eticheta"] = toSfStr(itm->getEticheta());
+
+                                            if (auto* da = dynamic_cast<DateAutentificare*>(itm))
+                                            {
+                                                buffers["user"] = toSfStr(da->getUtilizator());
+                                                buffers["pass"] = toSfStr(da->getParola());
+                                                buffers["url"] = toSfStr(da->getUrl());
+                                                buffers["note"] = toSfStr(da->getNote());
+                                            }
+                                            else if (auto* cb = dynamic_cast<CardBancar*>(itm))
+                                            {
+                                                buffers["num"] = toSfStr(cb->getNumar());
+                                                buffers["exp"] = toSfStr(cb->getDataExp());
+                                                buffers["cvv"] = toSfStr(cb->getCVV());
+                                            }
+                                            else if (auto* ns = dynamic_cast<NotitaSecurizata*>(itm))
+                                            {
+                                                buffers["note"] = toSfStr(ns->getNotita());
+                                            }
+                                            else if (auto* id = dynamic_cast<Identitate*>(itm))
+                                            {
+                                                buffers["fn"] = toSfStr(id->get_prenume());
+                                                buffers["ln"] = toSfStr(id->get_nume());
+                                                buffers["tel"] = toSfStr(id->get_telefon());
+                                                buffers["em"] = toSfStr(id->get_email());
+                                                buffers["str"] = toSfStr(id->get_strada());
+                                                buffers["ors"] = toSfStr(id->get_oras());
+                                                buffers["jud"] = toSfStr(id->get_judet());
+                                                buffers["tar"] = toSfStr(id->get_tara());
+                                                buffers["cp"] = toSfStr(id->get_cod_postal());
+                                            }
                                         }
+                                        window.draw(card);
+                                        sf::Text name = createUtf8Text(itm->getEticheta(), font, 19, sf::Color::Black);
+                                        name.setPosition({SIDE_W + 60, cy + 25});
+                                        window.draw(name);
                                     }
-                                    window.draw(card);
-                                    sf::Text name = createUtf8Text(itm->getEticheta(), font, 19, sf::Color::Black);
-                                    name.setPosition({SIDE_W + 60, cy + 25});
-                                    window.draw(name);
                                     cy += 85.f;
                                 }
                             }
@@ -439,20 +477,28 @@ int main()
 
                 if (currentCat != Category::Security)
                 {
-                    sf::RectangleShape fab({180, 50});
-                    fab.setPosition({930, 800});
+                    sf::RectangleShape fab({160, 45});
+                    fab.setPosition({1000, 810});
                     fab.setFillColor(CLR_ACCENT);
+                    if (fab.getGlobalBounds().contains(mPos))
+                    {
+                        fab.setFillColor(sf::Color(0, 80, 200));
+                    }
 
-                    if (click && fab.getGlobalBounds().contains(mPos))
+                    if ((click && fab.getGlobalBounds().contains(mPos)) || triggerSave)
                     {
                         appState = AppState::Add;
                         activeItem = nullptr;
-                        buffers.clear(); cursors.clear(); anchors.clear();
+                        buffers.clear();
+                        cursors.clear();
+                        anchors.clear();
                         focusKey = "eticheta";
+                        triggerSave = false;
                     }
                     window.draw(fab);
+
                     sf::Text fabT = createUtf8Text("+ Add item", font, 18, sf::Color::White);
-                    fabT.setPosition({965, 812});
+                    fabT.setPosition({1000 + 80.f - fabT.getGlobalBounds().size.x / 2.f, 810 + 10.f});
                     window.draw(fabT);
                 }
             }
@@ -462,12 +508,22 @@ int main()
                 std::vector<std::pair<std::string, std::string>> fields = {{"Eticheta / Title", "eticheta"}};
 
                 if (currentCat == Category::Accounts)
-                    fields.insert(fields.end(), {{"Username", "user"}, {"Password", "pass"}});
+                {
+                    fields.insert(fields.end(), {
+                                      {"Username", "user"},
+                                      {"Password", "pass"},
+                                      {"Website URL", "url"},
+                                      {"Notes", "note"}
+                                  });
+                }
                 else if (currentCat == Category::Cards)
                     fields.insert(fields.end(), {{"Card Number", "num"}, {"Expiry Date", "exp"}, {"CVV", "cvv"}});
                 else if (currentCat == Category::Identities)
-                    fields.insert(fields.end(), {{"First Name", "fn"}, {"Last Name", "ln"}, {"Phone", "tel"}, {"Email", "em"},
-                                      {"Street", "str"}, {"City", "ors"}, {"County", "jud"}, {"Country", "tar"}, {"Postal Code", "cp"}});
+                    fields.insert(fields.end(), {
+                                      {"First Name", "fn"}, {"Last Name", "ln"}, {"Phone", "tel"}, {"Email", "em"},
+                                      {"Street", "str"}, {"City", "ors"}, {"County", "jud"}, {"Country", "tar"},
+                                      {"Postal Code", "cp"}
+                                  });
                 else if (currentCat == Category::Notes) fields.push_back({"Note Content", "note"});
 
                 float fy = 50.f;
@@ -497,7 +553,11 @@ int main()
                     {
                         focusKey = f.second;
                         cursors[f.second] = anchors[f.second] = getIndexAtMouse(txt, mPos.x);
-                        if (dblClick) { anchors[f.second] = 0; cursors[f.second] = buffers[f.second].getSize(); }
+                        if (dblClick)
+                        {
+                            anchors[f.second] = 0;
+                            cursors[f.second] = buffers[f.second].getSize();
+                        }
                     }
 
                     if (f.second == "pass")
@@ -533,11 +593,33 @@ int main()
                     fy += step;
                 }
 
-                sf::RectangleShape bS({160, 50});
-                bS.setPosition({520, 810});
-                bS.setFillColor(CLR_ACCENT);
+                // --- BUTON BACK (Stil Outline - Modern) ---
+                sf::RectangleShape bBack({160, 45});
+                bBack.setPosition({820, 810}); // Mutat spre dreapta
+                bBack.setFillColor(sf::Color::Transparent);
+                bBack.setOutlineThickness(1.5f);
+                bBack.setOutlineColor(sf::Color(180, 180, 180));
 
-                if (click && bS.getGlobalBounds().contains(mPos))
+                if (click && bBack.getGlobalBounds().contains(mPos))
+                {
+                    appState = AppState::Vault;
+                    guiError = "";
+                    showPass = false;
+                }
+                window.draw(bBack);
+
+                sf::Text tBack = createUtf8Text("Cancel", font, 18, sf::Color(120, 120, 120));
+                // Centrare text în buton
+                tBack.setPosition({820 + 80.f - tBack.getGlobalBounds().size.x / 2.f, 810 + 10.f});
+                window.draw(tBack);
+
+                // --- BUTON SAVE (Stil Proeminent) ---
+                sf::RectangleShape bS({160, 45});
+                bS.setPosition({1000, 810}); // În extremitatea dreaptă
+                bS.setFillColor(CLR_ACCENT);
+                // Efect de hover (opțional)
+                if (bS.getGlobalBounds().contains(mPos)) bS.setFillColor(sf::Color(0, 80, 200));
+                if ((click && bS.getGlobalBounds().contains(mPos)) || triggerSave)
                 {
                     try
                     {
@@ -550,50 +632,97 @@ int main()
                             std::string p = date["pass"];
                             auto& cfg = Configuratie::getInstance();
                             if (p.length() < cfg.getLungimeMinimaParola())
-                                throw EroareValidare(date["eticheta"], (int)p.length(), (int)cfg.getLungimeMinimaParola());
-                            bool hasM = false, hasS = false;
+                                throw EroareValidare(date["eticheta"], static_cast<int>(p.length()),
+                                                     static_cast<int>(cfg.getLungimeMinimaParola()));
+                            bool hasM = false;
+                            bool hasS = false;
                             std::string sym = cfg.getCaractereSpecialeValide();
-                            for (char c : p) { if (isupper(c)) hasM = true; if (sym.find(c) != std::string::npos) hasS = true; }
-                            if (!hasM || !hasS) throw EroareValidare(date["eticheta"], "Parola trebuie să conțină o majuscula și un simbol.");
+                            for (char c : p)
+                            {
+                                if (isupper(c)) hasM = true;
+                                if (sym.find(c) != std::string::npos) hasS = true;
+                            }
+                            if (!hasM || !hasS)
+                                throw EroareValidare(date["eticheta"],
+                                                     "Parola trebuie să conțină o majuscula și un simbol.");
                         }
 
                         if (appState == AppState::Add)
                         {
-                            if (currentCat == Category::Accounts) {
-                                date["platforma"] = date["eticheta"]; date["utilizator"] = date["user"]; date["parola"] = date["pass"];
+                            if (currentCat == Category::Accounts)
+                            {
+                                date["platforma"] = date["eticheta"];
+                                date["utilizator"] = date["user"];
+                                date["parola"] = date["pass"];
+                                date["url"] = date["url"];
+                                date["note"] = date["note"];
                                 app.adaugaObiectInSeif("DateAutentificare", date);
-                            } else if (currentCat == Category::Cards) {
-                                date["numar"] = date["num"]; date["dataExpirare"] = date["exp"]; date["cvv"] = date["cvv"];
+                            }
+                            else if (currentCat == Category::Cards)
+                            {
+                                date["numar"] = date["num"];
+                                date["dataExpirare"] = date["exp"];
+                                date["cvv"] = date["cvv"];
                                 app.adaugaObiectInSeif("CardBancar", date);
-                            } else if (currentCat == Category::Notes) {
+                            }
+                            else if (currentCat == Category::Notes)
+                            {
                                 date["notita"] = date["note"];
                                 app.adaugaObiectInSeif("NotitaSecurizata", date);
-                            } else if (currentCat == Category::Identities) {
-                                date["nume"] = date["ln"]; date["prenume"] = date["fn"]; date["telefon"] = date["tel"];
-                                date["email"] = date["em"]; date["strada"] = date["str"]; date["oras"] = date["ors"];
-                                date["judet"] = date["jud"]; date["tara"] = date["tar"]; date["codPostal"] = date["cp"];
+                            }
+                            else if (currentCat == Category::Identities)
+                            {
+                                date["nume"] = date["ln"];
+                                date["prenume"] = date["fn"];
+                                date["telefon"] = date["tel"];
+                                date["email"] = date["em"];
+                                date["strada"] = date["str"];
+                                date["oras"] = date["ors"];
+                                date["judet"] = date["jud"];
+                                date["tara"] = date["tar"];
+                                date["codPostal"] = date["cp"];
                                 app.adaugaObiectInSeif("Identitate", date);
                             }
                         }
                         else if (activeItem)
                         {
                             activeItem->setEticheta(date["eticheta"]);
-                            if (auto* da = dynamic_cast<DateAutentificare*>(activeItem)) {
-                                da->setter_parola(date["pass"]); da->setter_numeUtilizator(date["user"]);
-                            } else if (auto* cb = dynamic_cast<CardBancar*>(activeItem)) {
-                                cb->setNumar(date["num"]); cb->setDataExp(date["exp"]); cb->setCVV(date["cvv"]);
-                            } else if (auto* ns = dynamic_cast<NotitaSecurizata*>(activeItem)) {
+                            if (auto* da = dynamic_cast<DateAutentificare*>(activeItem))
+                            {
+                                da->setter_parola(date["pass"]);
+                                da->setter_numeUtilizator(date["user"]);
+                                da->setter_url(date["url"]);
+                                da->setter_note(date["note"]);
+                            }
+                            else if (auto* cb = dynamic_cast<CardBancar*>(activeItem))
+                            {
+                                cb->setNumar(date["num"]);
+                                cb->setDataExp(date["exp"]);
+                                cb->setCVV(date["cvv"]);
+                            }
+                            else if (auto* ns = dynamic_cast<NotitaSecurizata*>(activeItem))
+                            {
                                 ns->set_notita(date["note"]);
-                            } else if (auto* id = dynamic_cast<Identitate*>(activeItem)) {
-                                id->set_nume(date["ln"]); id->set_prenume(date["fn"]); id->set_telefon(date["tel"]);
-                                id->set_email(date["em"]); id->set_strada(date["str"]); id->set_oras(date["ors"]);
-                                id->set_judet(date["jud"]); id->set_tara(date["tar"]); id->set_cod_postal(date["cp"]);
+                            }
+                            else if (auto* id = dynamic_cast<Identitate*>(activeItem))
+                            {
+                                id->set_nume(date["ln"]);
+                                id->set_prenume(date["fn"]);
+                                id->set_telefon(date["tel"]);
+                                id->set_email(date["em"]);
+                                id->set_strada(date["str"]);
+                                id->set_oras(date["ors"]);
+                                id->set_judet(date["jud"]);
+                                id->set_tara(date["tar"]);
+                                id->set_cod_postal(date["cp"]);
                             }
                         }
 
                         appState = AppState::Vault;
                         app.salveazaDatelePeDisc();
-                        guiError = ""; showPass = false;
+                        guiError = "";
+                        showPass = false;
+                        triggerSave = false;
                     }
                     catch (const ScriptException& e)
                     {
@@ -601,9 +730,10 @@ int main()
                     }
                 }
                 window.draw(bS);
-                sf::Text sT = createUtf8Text("Save", font, 22, sf::Color::White);
-                sT.setPosition({570, 810});
-                window.draw(sT);
+
+                sf::Text tSave = createUtf8Text("Save Changes", font, 18, sf::Color::White);
+                tSave.setPosition({1000 + 80.f - tSave.getGlobalBounds().size.x / 2.f, 810 + 10.f});
+                window.draw(tSave);
 
                 if (!guiError.empty())
                 {

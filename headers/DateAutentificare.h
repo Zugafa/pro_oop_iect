@@ -40,14 +40,18 @@ public:
             " | Parola Curenta: [" << parola << "]\n";
     };
 
-    // Getteri const
     [[nodiscard]] const std::string& getPlatforma() const { return numePlatforma; }
     [[nodiscard]] const std::string& getUtilizator() const { return utilizator; }
     [[nodiscard]] const std::string& getParola() const { return parola; }
+    [[nodiscard]] const std::string& getUrl() const { return url; }
+    [[nodiscard]] const std::string& getNote() const { return note; }
 
-    // 1. Setter Parola cu Validare
+
     void setter_parola(const std::string& nouaParola);
     void setter_numeUtilizator(const std::string& nouNume);
+    void setter_numePlatforma(const std::string& nouNume);
+    void setter_url(const std::string& nouaUrl);
+    void setter_note(const std::string& nouaNote);
 
     // 2. Criptare Vigenere
     void CriptareVigenere();
