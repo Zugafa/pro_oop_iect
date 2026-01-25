@@ -34,7 +34,7 @@ bool Utilizator::verificaParola(const std::string& parola) const
     return parola == parolaMaster;
 }
 
-void Utilizator::adaugaObiect(std::unique_ptr<Seif> itemNou)
+void Utilizator::adaugaObiect(std::shared_ptr<Seif> itemNou)
 {
     // E cont? (validare)
     const auto* cont = dynamic_cast<const DateAutentificare*>(itemNou.get());
@@ -59,6 +59,8 @@ void Utilizator::adaugaObiect(std::unique_ptr<Seif> itemNou)
         i++;
 
     seif.insert(seif.begin() + static_cast<std::ptrdiff_t>(i), std::move(itemNou));
+    istoricActiuni.adauga("Adăugat: " + etichetaNoua);
+    notify();
 }
 
 void Utilizator::stergeObiect(const std::string& eticheta)
@@ -73,6 +75,11 @@ void Utilizator::stergeObiect(const std::string& eticheta)
         }
     }
     throw ObiectNegasit("Nu s-a gasit obiectul cu eticheta '" + eticheta + "' pentru stergere.");
+}
+
+void Utilizator::notify() const
+{
+    for (auto* obs : observatori) obs->update();
 }
 
 std::ostream& operator<<(std::ostream& out, const Utilizator& user)
@@ -91,13 +98,10 @@ std::ostream& operator<<(std::ostream& out, const Utilizator& user)
     else
     {
         int i = 1;
-        // Iterăm prin vectorul de unique_ptr
         for (const auto& item : user.seif)
         {
             out << "[" << i++ << "] ";
 
-            // Apelăm operator<< (care apelează virtual afiseaza())
-            // pentru a afișa polimorfic (Cont, Adresa, Card...)
             out << *item;
         }
     }
@@ -112,4 +116,14 @@ Seif* Utilizator::getObiectAt(int index) const
         throw EroareAcces(index, static_cast<int>(seif.size()));
     }
     return seif[index].get();
+}
+
+size_t Utilizator::getNrObiecte() const
+{
+    return seif.size();
+}
+
+void Utilizator::attach(Observer* obs)
+{
+    observatori.push_back(obs);
 }

@@ -11,12 +11,12 @@ SeifFactory& SeifFactory::getInstance()
     return instance;
 }
 
-std::unique_ptr<Seif> SeifFactory::creeazaSeif(const std::string& tip,
+std::shared_ptr<Seif> SeifFactory::creeazaSeif(const std::string& tip,
                                                const std::map<std::string, std::string>& date)
 {
     if (tip == "DateAutentificare")
     {
-        return std::make_unique<DateAutentificare>(
+        return std::make_shared<DateAutentificare>(
             date.at("platforma"),
             date.at("utilizator"),
             date.at("parola")
@@ -24,7 +24,7 @@ std::unique_ptr<Seif> SeifFactory::creeazaSeif(const std::string& tip,
     }
     if (tip == "CardBancar")
     {
-        return std::make_unique<CardBancar>(
+        return std::make_shared<CardBancar>(
             date.at("eticheta"),
             date.at("numar"),
             date.at("dataExpirare"),
@@ -32,7 +32,7 @@ std::unique_ptr<Seif> SeifFactory::creeazaSeif(const std::string& tip,
     }
     if (tip == "Identitate")
     {
-        return std::make_unique<Identitate>(
+        return std::make_shared<Identitate>(
             date.at("eticheta"),
             date.at("nume"),
             date.at("prenume"),
@@ -46,7 +46,7 @@ std::unique_ptr<Seif> SeifFactory::creeazaSeif(const std::string& tip,
     }
     if (tip == "NotitaSecurizata")
     {
-        return std::make_unique<NotitaSecurizata>(
+        return std::make_shared<NotitaSecurizata>(
             date.at("eticheta"),
             date.at("notita"));
     }

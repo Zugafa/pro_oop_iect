@@ -28,16 +28,13 @@ public:
 
     void logout() { user_curent = nullptr; }
 
-    [[nodiscard]] Utilizator* getUserCrt() const
-    {
-        return user_curent;
-    }
+    [[nodiscard]] Utilizator* getUserCrt() const;
 
-    void adaugaObiectInSeif(const std::string& tip, const std::map<std::string, std::string>& date)
-    {
-        if (user_curent == nullptr) throw EroareValidare("", "User nelogat");
-        else user_curent->adaugaObiect(SeifFactory::getInstance().creeazaSeif(tip, date));
-    }
+    void adaugaObiectInSeif(const std::string& tip, const std::map<std::string, std::string>& date) const;
+
+    void salveazaDatelePeDisc() const;
+
+    void incarcaDateleDePeDisc() const;
 };
 
 

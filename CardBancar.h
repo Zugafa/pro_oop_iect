@@ -13,7 +13,7 @@ public:
     {
     }
 
-    [[nodiscard]] std::unique_ptr<Seif> clone() const override;
+    [[nodiscard]] std::shared_ptr<Seif> clone() const override;
 
     [[nodiscard]] std::string getTip() const override;
 
@@ -28,6 +28,8 @@ public:
     [[nodiscard]] const std::string& getNumar() const;
     [[nodiscard]] const std::string& getDataExp() const;
     [[nodiscard]] const std::string& getCVV() const;
+
+    [[nodiscard]] std::map<std::string, std::string> getDatePentruSalvare() const override;
 };
 
 

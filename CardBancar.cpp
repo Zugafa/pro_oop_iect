@@ -4,9 +4,9 @@
 #include <iostream>
 #include "CardBancar.h"
 
-std::unique_ptr<Seif> CardBancar::clone() const
+std::shared_ptr<Seif> CardBancar::clone() const
 {
-    return std::make_unique<CardBancar>(*this);
+    return std::make_shared<CardBancar>(*this);
 }
 
 std::string CardBancar::getTip() const
@@ -60,4 +60,14 @@ const std::string& CardBancar::getDataExp() const
 const std::string& CardBancar::getCVV() const
 {
     return cvv;
+}
+
+std::map<std::string, std::string> CardBancar::getDatePentruSalvare() const
+{
+    std::map<std::string, std::string> date;
+    date["eticheta"] = getEticheta();
+    date["numar"] = numar;
+    date["dataExpirare"] = dataExpirare;
+    date["cvv"] = cvv;
+    return date;
 }

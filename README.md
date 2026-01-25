@@ -1,155 +1,75 @@
-# Nu primesc notă pentru că nu am pus titlu și descriere
+# S.C.R.I.P.T. Password Manager
 
-### Folosiți template-ul corespunzător grupei voastre!
+![C++](https://img.shields.io/badge/C++-20-blue.svg) ![SFML](https://img.shields.io/badge/GUI-SFML%203.0-green.svg) ![License](https://img.shields.io/badge/License-Proprietary-red.svg)
 
-| Laborant  | Link template                                |
-|-----------|----------------------------------------------|
-| Dragoș B  | https://github.com/Ionnier/oop-template      |
-| Tiberiu M | https://github.com/MaximTiberiu/oop-template |
-| Marius MC | https://github.com/mcmarius/oop-template     |
+**S.C.R.I.P.T.** (Secure, Centralized, Reliable, Identity, Password, Tool) este un instrument software avansat dezvoltat în C++, conceput ca o soluție securizată și centralizată pentru gestionarea parolelor și identităților digitale.
 
-### Important!
+---
 
-Aveți voie cu cod generat de modele de limbaj la care nu ați contribuit semnificativ doar în folder-ul `generated`.
-Codul generat pus "ca să fie"/pe care nu îl înțelegeți se punctează doar pentru puncte bonus, doar în contextul
-în care oferă funcționalități ajutătoare și doar dacă are sens.
+## 💡 Ideea Proiectului
 
-O cerință nu se consideră îndeplinită dacă este realizată doar prin cod generat.
+În era digitală, securitatea datelor nu este opțională. Utilizatorii jonglează cu numeroase conturi, iar memorarea sau stocarea nesigură a acestora reprezintă un risc major.
 
-- **Fără cod de umplutură/fără sens!**
-- **Fără copy-paste!**
-- **Fără variabile globale!**
-- **Fără atribute publice!**
+**S.C.R.I.P.T.** propune un sistem robust, fundamentat pe principii moderne de inginerie software, pentru a stoca și organiza date sensibile. Dacă în versiunile anterioare accentul a fost pe logica OOP, **Milestone 3** transformă proiectul într-o **aplicație Desktop completă**, oferind o experiență vizuală intuitivă și persistența datelor.
 
-### Tema 0
+---
 
-- [ ] Nume proiect (poate fi schimbat ulterior)
-- [ ] Scurtă descriere a temei alese, ce v-ați propus să implementați
+## 🚀 Funcționalități și Noutăți (v1.0 - Milestone 3)
 
-## Tema 1
+Versiunea curentă reprezintă un salt major al distribuției, migrând de la consolă la o interfață grafică modernă.
 
-#### Cerințe
-- [ ] definirea a minim **3-4 clase** folosind compunere cu clasele definite de voi; moștenirile nu se iau în considerare aici
-- [ ] constructori de inițializare cu parametri pentru fiecare clasă
-- [ ] pentru o aceeași (singură) clasă: constructor de copiere, `operator=` de copiere, destructor
-<!-- - [ ] pentru o altă clasă: constructor de mutare, `operator=` de mutare, destructor -->
-<!-- - [ ] pentru o altă clasă: toate cele 5 funcții membru speciale -->
-- [ ] `operator<<` pentru **toate** clasele pentru afișare (`std::ostream`) folosind compunere de apeluri cu `operator<<`
-- [ ] cât mai multe `const` (unde este cazul) și funcții `private`
-- [ ] implementarea a minim 3 funcții membru publice pentru funcționalități netriviale specifice temei alese, dintre care cel puțin 1-2 funcții mai complexe
-  - nu doar citiri/afișări sau adăugat/șters elemente într-un/dintr-un vector
-- [ ] scenariu de utilizare **cu sens** a claselor definite:
-  - crearea de obiecte și apelarea tuturor funcțiilor membru publice în main
-  - vor fi adăugate în fișierul `tastatura.txt` DOAR exemple de date de intrare de la tastatură (dacă există); dacă aveți nevoie de date din fișiere, creați alte fișiere separat
-- [ ] minim 50-55% din codul propriu să fie C++, `.gitattributes` configurat corect
-- [ ] tag de `git`: de exemplu `v0.1`
-- [ ] serviciu de integrare continuă (CI) cu **toate bifele**; exemplu: GitHub Actions
+### 🖥️ Interfață Grafică (GUI)
+* **Design Modern:** Construită cu **SFML 3.0**, fereastra aplicației oferă un aspect profesional.
+* **Navigare Intuitivă:** Sidebar lateral, carduri interactive pentru obiecte și formulare dinamice de editare.
+* **Feedback Vizual:** Cursor custom, selecție text, validare în timp real.
 
-## Tema 2
+### 💾 Persistența Datelor
+* **Salvare Automată:** Datele sunt salvate automat într-un fișier binar (`vault.dat`).
+* **Securitate:** Fișierul este criptat folosind **XOR Encryption** la nivel de bit, făcându-l ilizibil în editoare text standard.
+* **Serializare:** Sistem propriu de serializare bazat pe `std::map`.
 
-#### Cerințe
-- [ ] separarea codului din clase în `.h` (sau `.hpp`) și `.cpp`
-- [ ] moșteniri:
-  - minim o clasă de bază și **3 clase derivate** din aceeași ierarhie
-  - ierarhia trebuie să fie cu bază proprie, nu derivată dintr-o clasă predefinită
-  - [ ] funcții virtuale (pure) apelate prin pointeri de bază din clasa care conține atributul de tip pointer de bază
-    - minim o funcție virtuală va fi **specifică temei** (i.e. nu simple citiri/afișări sau preluate din biblioteci i.e. draw/update/render)
-    - constructori virtuali (clone): sunt necesari, dar nu se consideră funcții specifice temei
-    - afișare virtuală, interfață non-virtuală
-  - [ ] apelarea constructorului din clasa de bază din constructori din derivate
-  - [ ] clasă cu atribut de tip pointer la o clasă de bază cu derivate; aici apelați funcțiile virtuale prin pointer de bază, eventual prin interfața non-virtuală din bază
-    - [ ] suprascris cc/op= pentru copieri/atribuiri corecte, copy and swap
-    - [ ] `dynamic_cast`/`std::dynamic_pointer_cast` pentru downcast cu sens
-    - [ ] smart pointers (recomandat, opțional)
-- [ ] excepții
-  - [ ] ierarhie proprie cu baza `std::exception` sau derivată din `std::exception`; minim **3** clase pentru erori specifice distincte
-    - clasele de excepții trebuie să trateze categorii de erori distincte (exemplu de erori echivalente: citire fișiere cu diverse extensii)
-  - [ ] utilizare cu sens: de exemplu, `throw` în constructor (sau funcție care întoarce un obiect), `try`/`catch` în `main`
-  - această ierarhie va fi complet independentă de ierarhia cu funcții virtuale
-- [ ] funcții și atribute `static`
-- [ ] STL
-- [ ] cât mai multe `const`
-- [ ] funcții *de nivel înalt*, de eliminat cât mai mulți getters/setters/funcții low-level
-- [ ] minim 75-80% din codul propriu să fie C++
-- [ ] la sfârșit: commit separat cu adăugarea unei noi clase derivate fără a modifica restul codului, **pe lângă cele 3 derivate deja adăugate** din aceeași ierarhie
-  - noua derivată nu poate fi una existentă care a fost ștearsă și adăugată din nou
-  - noua derivată va fi integrată în codul existent (adică va fi folosită, nu adăugată doar ca să fie)
-- [ ] tag de `git` pe commit cu **toate bifele**: de exemplu `v0.2`
+### 🛡️ Monitorizare Live
+* **Security Monitor:** Un modul dedicat analizează în timp real tăria parolelor și validitatea cardurilor.
+* **Alerte:** Afișează avertismente (WARN/CRITICAL) direct în dashboard-ul "Security Report".
 
-## Tema 3
+---
 
-#### Cerințe
-- [ ] 2 șabloane de proiectare (design patterns)
-- [ ] o clasă șablon cu sens; minim **2 instanțieri**
-  - [ ] preferabil și o funcție șablon (template) cu sens; minim 2 instanțieri
-- [ ] minim 85% din codul propriu să fie C++
-<!-- - [ ] o specializare pe funcție/clasă șablon -->
-- [ ] tag de `git` pe commit cu **toate bifele**: de exemplu `v0.3` sau `v1.0`
+## 🏛️ Arhitectură și Design Patterns
 
-## Instrucțiuni de compilare
+Proiectul demonstrează utilizarea avansată a C++ și a șabloanelor de proiectare consacrate.
 
-Proiectul este configurat cu CMake.
+### 1. Design Patterns
+* **Singleton:** Utilizat pentru clasele unice globale (`GestionarParole`, `ResourceManager`, `Configuratie`, `SeifFactory`).
+* **Factory Pattern:** `SeifFactory` centralizează crearea obiectelor polimorfice, esențial pentru încărcarea datelor din fișier fără a cunoaște tipul lor la compilare.
+* **Observer Pattern:** Implementat prin `SecurityMonitor` (Observer) care ascultă modificările din `Utilizator` (Subject) pentru a actualiza raportul de securitate.
+* **Prototype Pattern:** Metoda `clone()` asigură deep copy pentru obiectele polimorfice.
 
-Instrucțiuni pentru terminal:
+### 2. Programare Generic (Templates)
+* **`Manager<T>`:** Clasă șablon pentru gestionarea colecțiilor generice (utilizatori, istoric).
+* **`gasesteDupaNume<T>`:** Funcție șablon pentru căutarea elementelor în diverse containere, gestionând atât obiecte cât și smart pointers.
 
-0. Biblioteci necesare pe Linux (presupunem sistem de operare bazat pe Debian)
-```sh
-sudo apt-get update && \
-  sudo apt-get install libxrandr-dev \
-    libxcursor-dev \
-    libudev-dev \
-    libopenal-dev \
-    libflac-dev \
-    libvorbis-dev \
-    libgl1-mesa-dev \
-    libegl1-mesa-dev \
-    libdrm-dev \
-    libgbm-dev \
-    libfreetype6-dev
-```
+### 3. OOP & Memory Management
+* **Smart Pointers:** Înlocuirea `std::unique_ptr` cu `std::shared_ptr`.
+* **Excepții Custom:** Mici modificări.
 
-Dacă lipsesc și alte biblioteci, ștergeți folder-ul de build de la pasul 1 și reconfigurați proiectul după ce ați instalat ce lipsea.
+---
+## 📝 Licență
+Acest software este proprietar. Vizualizarea și rularea sunt permise, dar **modificarea sau redistribuirea codului sunt strict interzise**.
+Consultați fișierul [LICENSE](LICENSE) pentru detalii.
+---
 
-1. Pasul de configurare
-```sh
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
-# sau ./scripts/cmake.sh configure
-```
+## 🛠️ Instrucțiuni de Compilare și Rulare
 
-Sau pe Windows cu GCC:
-```sh
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -G Ninja
-# sau ./scripts/cmake.sh configure -g Ninja
-```
+Proiectul necesită un compilator compatibil **C++20** și biblioteca **SFML 3.0**.
 
-La acest pas putem cere să generăm fișiere de proiect pentru diverse medii de lucru.
+### Pre-rechizite
+Asigurați-vă că SFML este instalat și configurat corect în `CMakeLists.txt`.
 
+### Build
+```bash
+# 1. Crearea directorului de build
+cmake -B cmake-build-debug
 
-2. Pasul de compilare
-```sh
-cmake --build build --config Debug --parallel 6
-# sau ./scripts/cmake.sh build
-```
-
-Cu opțiunea `parallel` specificăm numărul de fișiere compilate în paralel.
-
-
-3. Pasul de instalare (opțional)
-```sh
-cmake --install build --config Debug --prefix install_dir
-# sau ./scripts/cmake.sh install
-```
-
-Vezi și [`scripts/cmake.sh`](scripts/cmake.sh).
-
-Observație: folderele `build/` și `install_dir/` sunt adăugate în fișierul `.gitignore` deoarece
-conțin fișiere generate și nu ne ajută să le versionăm.
-
-
-## Resurse
-
-- [SFML](https://github.com/SFML/SFML/tree/2.6.1) (Zlib)
-  - [OpenAL](https://openal-soft.org/) (LGPL): din cauza licenței, trebuie distribuită ca shared library
-- [Poza cu avionul](https://pixabay.com/vectors/travel-holiday-trip-flight-6913775/)
-- [Font](https://fonts.google.com/selection?selection.family=Fira+Sans)
-- adăugați trimiteri către resursele externe care v-au ajutat sau pe care le-ați folosit
+# 2. Compilarea proiectului 
+# (Acest pas va copia automat folderele 'images' și 'fonts' lângă executabil)
+cmake --build cmake-build-debug

@@ -13,7 +13,7 @@ public:
                const std::string& judet,
                const std::string& tara, const std::string& codPostal);
 
-    [[nodiscard]] std::unique_ptr<Seif> clone() const override;
+    [[nodiscard]] std::shared_ptr<Seif> clone() const override;
 
     [[nodiscard]] std::string getTip() const override;
 
@@ -40,6 +40,8 @@ public:
     [[nodiscard]] const std::string& get_judet() const;
     [[nodiscard]] const std::string& get_tara() const;
     [[nodiscard]] const std::string& get_cod_postal() const;
+
+    [[nodiscard]] std::map<std::string, std::string> getDatePentruSalvare() const override;
 };
 
 #endif //OOP_IDENTITATE_H

@@ -18,9 +18,9 @@ public:
     DateAutentificare& operator=(const DateAutentificare& sursa) = default;
     ~DateAutentificare() override = default;
 
-    [[nodiscard]] std::unique_ptr<Seif> clone() const override
+    [[nodiscard]] std::shared_ptr<Seif> clone() const override
     {
-        return std::make_unique<DateAutentificare>(*this);
+        return std::make_shared<DateAutentificare>(*this);
     };
 
     [[nodiscard]] std::string getTip() const override
@@ -51,6 +51,8 @@ public:
     void deCriptareVigenere();
 
     void verificaSecuritate() const override;
+
+    [[nodiscard]] std::map<std::string, std::string> getDatePentruSalvare() const override;
 };
 
 #endif //OOP_DATEAUTENTIFICARE_H

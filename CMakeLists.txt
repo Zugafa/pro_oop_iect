@@ -61,6 +61,9 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         Utilizator.cpp Utilizator.h
         ResourceManager.cpp ResourceManager.hpp
         generated/src/Helper.cpp
+        Observer.cpp
+        Observer.h
+        SecurityMonitor.cpp SecurityMonitor.h
 )
 
 set_compiler_flags(RUN_SANITIZERS TRUE TARGET_NAMES ${MAIN_EXECUTABLE_NAME})

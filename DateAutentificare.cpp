@@ -97,3 +97,12 @@ void DateAutentificare::verificaSecuritate() const
     else
         std::cout << "[OK] Contul " << getEticheta() << " este securizat.\n";
 }
+
+std::map<std::string, std::string> DateAutentificare::getDatePentruSalvare() const
+{
+    std::map<std::string, std::string> date;
+    date["platforma"] = getEticheta(); // Folosim eticheta ca platforma
+    date["utilizator"] = numeUtilizator;
+    date["parola"] = parola;
+    return date;
+}

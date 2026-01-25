@@ -24,8 +24,7 @@ void ResourceManager::loadTexture(const std::string& path, const std::string& te
 
     if(!texture.loadFromFile(path + '/' + texture_name))
     {
-        // Fiind un exemplu demonstrativ aruncăm std::runtime_error, dar la teme va trebui
-        // să vă faceți o ierarhie proprie de excepții
+
         throw std::runtime_error("Textura " + texture_name + " nu a putut fi incarcata.");
     }
 

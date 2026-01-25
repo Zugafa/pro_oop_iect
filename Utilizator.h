@@ -2,6 +2,8 @@
 #define OOP_UTILIZATOR_H
 #include "DateAutentificare.h"
 #include "Seif.h"
+#include "Observer.h"
+#include "Manager.h"
 #include <vector>
 #include <memory>
 
@@ -9,10 +11,11 @@ class Utilizator
 {
 private:
     std::string nume, email, parolaMaster;
-    std::vector<std::unique_ptr<Seif>> seif;
+    std::vector<std::shared_ptr<Seif>> seif;
+    std::vector<Observer*> observatori;
+    Manager<std::string> istoricActiuni;
 
 public:
-    // Constructor de initializare
     explicit Utilizator(const std::string& n, const std::string& e, const std::string& pw)
         : nume{n}, email{e}, parolaMaster{pw}
     {
@@ -20,15 +23,12 @@ public:
 
     ~Utilizator() = default;
 
-    // Constructor de copiere
     Utilizator(const Utilizator& sursa);
 
-    // Operator de atribuire
     Utilizator& operator=(Utilizator sursa);
 
     void swap(Utilizator& other) noexcept;
 
-    // operator<<
     friend std::ostream& operator<<(std::ostream& out, const Utilizator& user);
 
     [[nodiscard]] std::string getNume() const { return nume; }
@@ -36,12 +36,15 @@ public:
 
     [[nodiscard]] bool verificaParola(const std::string& parola) const;
 
-    void adaugaObiect(std::unique_ptr<Seif> itemNou);
+    void adaugaObiect(std::shared_ptr<Seif> itemNou);
     void stergeObiect(const std::string& eticheta);
     [[nodiscard]] Seif* getObiectAt(int index) const;
+    [[nodiscard]] size_t getNrObiecte() const;
+
+    void attach(Observer* obs);
+    void notify() const;
 };
 
-// operator<< pentru Utilizator
 std::ostream& operator<<(std::ostream& out, const Utilizator& user);
 
 #endif //OOP_UTILIZATOR_H

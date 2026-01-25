@@ -1,9 +1,9 @@
 #include "NotitaSecurizata.h"
 #include <iostream>
 
-std::unique_ptr<Seif> NotitaSecurizata::clone() const
+std::shared_ptr<Seif> NotitaSecurizata::clone() const
 {
-    return std::make_unique<NotitaSecurizata>(*this);
+    return std::make_shared<NotitaSecurizata>(*this);
 }
 
 std::string NotitaSecurizata::getTip() const
@@ -31,3 +31,11 @@ void NotitaSecurizata::set_notita(const std::string& nouContinut)
 
 const std::string& NotitaSecurizata::getNotita() const
 { return notita; }
+
+std::map<std::string, std::string> NotitaSecurizata::getDatePentruSalvare() const
+{
+    std::map<std::string, std::string> date;
+    date["eticheta"] = getEticheta();
+    date["notita"] = notita;
+    return date;
+}

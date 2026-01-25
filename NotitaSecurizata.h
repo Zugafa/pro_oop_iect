@@ -14,7 +14,7 @@ public:
     {
     };
 
-    [[nodiscard]] std::unique_ptr<Seif> clone() const override;
+    [[nodiscard]] std::shared_ptr<Seif> clone() const override;
 
     [[nodiscard]] std::string getTip() const override;
 
@@ -23,6 +23,8 @@ public:
 
     void set_notita(const std::string& nouContinut);
     [[nodiscard]] const std::string& getNotita() const;
+
+    [[nodiscard]] std::map<std::string, std::string> getDatePentruSalvare() const override;
 };
 
 

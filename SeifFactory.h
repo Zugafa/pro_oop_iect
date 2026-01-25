@@ -17,7 +17,7 @@ private:
 public:
     static SeifFactory& getInstance();
 
-    [[nodiscard]] std::unique_ptr<Seif> creeazaSeif(const std::string& tip,
+    [[nodiscard]] std::shared_ptr<Seif> creeazaSeif(const std::string& tip,
                                                     const std::map<std::string, std::string>& date);
 };
 

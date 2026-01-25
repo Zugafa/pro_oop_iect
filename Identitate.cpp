@@ -14,9 +14,9 @@ Identitate::Identitate(const std::string& eticheta, const std::string& nume, con
 {
 }
 
-std::unique_ptr<Seif> Identitate::clone() const
+std::shared_ptr<Seif> Identitate::clone() const
 {
-    return std::make_unique<Identitate>(*this);
+    return std::make_shared<Identitate>(*this);
 }
 
 std::string Identitate::getTip() const
@@ -126,4 +126,20 @@ const std::string& Identitate::get_tara() const
 const std::string& Identitate::get_cod_postal() const
 {
     return codPostal;
+}
+
+std::map<std::string, std::string> Identitate::getDatePentruSalvare() const
+{
+    std::map<std::string, std::string> date;
+    date["eticheta"] = getEticheta();
+    date["nume"] = nume;
+    date["prenume"] = prenume;
+    date["telefon"] = telefon;
+    date["email"] = email;
+    date["strada"] = strada;
+    date["oras"] = oras;
+    date["judet"] = judet;
+    date["tara"] = tara;
+    date["codPostal"] = codPostal;
+    return date;
 }
