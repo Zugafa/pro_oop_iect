@@ -1,0 +1,58 @@
+#ifndef OOP_DATEAUTENTIFICARE_H
+#define OOP_DATEAUTENTIFICARE_H
+#include "Configuratie.h"
+#include "Seif.h"
+
+class DateAutentificare : public Seif
+{
+private:
+    std::string numePlatforma, numeUtilizator, parola;
+
+public:
+    // Constructor explicit de initializare (cu compunere)
+    explicit DateAutentificare(const std::string& nPlat,
+                               const std::string& nUtiliz,
+                               const std::string& pass);
+
+    DateAutentificare(const DateAutentificare& sursa) = default;
+    DateAutentificare& operator=(const DateAutentificare& sursa) = default;
+    ~DateAutentificare() override = default;
+
+    [[nodiscard]] std::shared_ptr<Seif> clone() const override
+    {
+        return std::make_shared<DateAutentificare>(*this);
+    };
+
+    [[nodiscard]] std::string getTip() const override
+    {
+        return "Date Autentificare";
+    };
+    void setEticheta(const std::string& eticheta) override;
+
+    void afiseaza(std::ostream& os) const override
+    {
+        os << "  -> Platforma: " << numePlatforma << " | Utilizator: " << numeUtilizator <<
+            " | Parola Curenta: [" << parola << "]\n";
+    };
+
+    // Getteri const
+    [[nodiscard]] const std::string& getPlatforma() const { return numePlatforma; }
+    [[nodiscard]] const std::string& getUtilizator() const { return numeUtilizator; }
+    [[nodiscard]] const std::string& getParola() const { return parola; }
+
+    // 1. Setter Parola cu Validare
+    void setter_parola(const std::string& nouaParola);
+    void setter_numeUtilizator(const std::string& nouNume);
+
+    // 2. Criptare Vigenere
+    void CriptareVigenere();
+
+    // 3. Decriptare Vigenere
+    void deCriptareVigenere();
+
+    void verificaSecuritate() const override;
+
+    [[nodiscard]] std::map<std::string, std::string> getDatePentruSalvare() const override;
+};
+
+#endif //OOP_DATEAUTENTIFICARE_H

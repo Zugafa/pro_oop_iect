@@ -1,0 +1,41 @@
+#include "NotitaSecurizata.h"
+#include <iostream>
+
+std::shared_ptr<Seif> NotitaSecurizata::clone() const
+{
+    return std::make_shared<NotitaSecurizata>(*this);
+}
+
+std::string NotitaSecurizata::getTip() const
+{
+    return "Notita Securizata";
+}
+
+void NotitaSecurizata::afiseaza(std::ostream& os) const
+{
+    os << "Notita Securizata: " << notita << std::endl;
+}
+
+void NotitaSecurizata::verificaSecuritate() const
+{
+    if (notita.empty())
+        std::cout << "[INFO] Notita '" << getEticheta() << "' este goala.\n";
+    else
+        std::cout << "[LOCKED] Notita '" << getEticheta() << "' contine date criptate.\n";
+}
+
+void NotitaSecurizata::set_notita(const std::string& nouContinut)
+{
+    this->notita = nouContinut;
+}
+
+const std::string& NotitaSecurizata::getNotita() const
+{ return notita; }
+
+std::map<std::string, std::string> NotitaSecurizata::getDatePentruSalvare() const
+{
+    std::map<std::string, std::string> date;
+    date["eticheta"] = getEticheta();
+    date["notita"] = notita;
+    return date;
+}
