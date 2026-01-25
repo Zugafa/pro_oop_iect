@@ -136,7 +136,7 @@ int main()
 
                 if (u->getNrObiecte() == 0)
                 {
-                    u->adaugaObiect(std::make_shared<DateAutentificare>("Facebook", "andrei.nituică", "ParolăValidă123!"));
+                    u->adaugaObiect(std::make_shared<DateAutentificare>("Facebook", "andrei.nituică", "ParolăValidă123!","https://www.facebook.com/","Cont principal"));
                     u->adaugaObiect(std::make_shared<CardBancar>("Revolut", "4556 1234 5678 0000", "12/28", "123"));
                     u->adaugaObiect(std::make_shared<NotitaSecurizata>("Cod Poartă", "Acces: 9988#"));
                     u->adaugaObiect(std::make_shared<Identitate>("Acasă", "Nițuică", "Andrei", "0720x", "a@m.ro",

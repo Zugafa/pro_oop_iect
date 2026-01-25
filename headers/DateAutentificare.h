@@ -5,15 +5,20 @@
 
 class DateAutentificare : public Seif
 {
-private:
-    std::string numePlatforma, numeUtilizator, parola;
+    std::string utilizator;
+    std::string parola;
+    std::string url;
+    std::string numePlatforma;
+    std::string note;
 
 public:
-    // Constructor explicit de initializare (cu compunere)
-    explicit DateAutentificare(const std::string& nPlat,
-                               const std::string& nUtiliz,
-                               const std::string& pass);
+    DateAutentificare(const std::string& eticheta_,
+                      const std::string& utilizator_,
+                      const std::string& parola_,
+                      const std::string& url_,
+                      const std::string& note_);
 
+    explicit DateAutentificare(const std::map<std::string, std::string>& date);
     DateAutentificare(const DateAutentificare& sursa) = default;
     DateAutentificare& operator=(const DateAutentificare& sursa) = default;
     ~DateAutentificare() override = default;
@@ -31,13 +36,13 @@ public:
 
     void afiseaza(std::ostream& os) const override
     {
-        os << "  -> Platforma: " << numePlatforma << " | Utilizator: " << numeUtilizator <<
+        os << "  -> Platforma: " << numePlatforma << " | Utilizator: " << utilizator <<
             " | Parola Curenta: [" << parola << "]\n";
     };
 
     // Getteri const
     [[nodiscard]] const std::string& getPlatforma() const { return numePlatforma; }
-    [[nodiscard]] const std::string& getUtilizator() const { return numeUtilizator; }
+    [[nodiscard]] const std::string& getUtilizator() const { return utilizator; }
     [[nodiscard]] const std::string& getParola() const { return parola; }
 
     // 1. Setter Parola cu Validare

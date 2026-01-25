@@ -19,7 +19,9 @@ std::shared_ptr<Seif> SeifFactory::creeazaSeif(const std::string& tip,
         return std::make_shared<DateAutentificare>(
             date.at("platforma"),
             date.at("utilizator"),
-            date.at("parola")
+            date.at("parola"),
+            date.at("url"),
+            date.at("note")
         );
     }
     if (tip == "CardBancar")

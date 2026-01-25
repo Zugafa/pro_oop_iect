@@ -1,24 +1,39 @@
-//
-// Created by nitui on 11/2/2025.
-//
-
 #include "DateAutentificare.h"
 #include "EroareValidare.h"
 
-// IMPLEMENTARE CONSTRUCTOR (4 Argumente)
-DateAutentificare::DateAutentificare(const std::string& nPlat,
-                                     const std::string& nUtiliz,
-                                     const std::string& pass)
-    : Seif{nPlat},
-      numePlatforma{nPlat},
-      numeUtilizator{nUtiliz},
-      parola{pass}
+#include "DateAutentificare.h"
+
+// Constructorul principal
+DateAutentificare::DateAutentificare(const std::string& eticheta_,
+                                     const std::string& utilizator_,
+                                     const std::string& parola_,
+                                     const std::string& url_,
+                                     const std::string& note_)
+    : Seif(eticheta_),
+      utilizator(utilizator_),
+      parola(parola_),
+      url(url_),
+      note(note_)
 {
+    // Sincronizăm numePlatforma cu eticheta primită
+    numePlatforma = eticheta_;
 }
 
-void DateAutentificare::setEticheta(const std::string& eticheta) {
-    Seif::setEticheta(eticheta);
-    this->numePlatforma = eticheta;
+// Constructorul folosit de SeifFactory (din map)
+DateAutentificare::DateAutentificare(const std::map<std::string, std::string>& date)
+    : Seif(date.at("num")),
+      utilizator(date.at("user")),
+      parola(date.at("pass")),
+      url(date.at("url")),
+      note(date.at("note"))
+{
+    numePlatforma = date.at("num");
+}
+
+void DateAutentificare::setEticheta(const std::string& etichetaNoua)
+{
+    Seif::setEticheta(etichetaNoua);
+    numePlatforma = etichetaNoua;
 }
 
 void DateAutentificare::setter_parola(const std::string& nouaParola)
@@ -54,7 +69,7 @@ void DateAutentificare::setter_parola(const std::string& nouaParola)
 
 void DateAutentificare::setter_numeUtilizator(const std::string& nouNume)
 {
-    this->numeUtilizator = nouNume;
+    this->utilizator = nouNume;
 }
 
 void DateAutentificare::CriptareVigenere()
@@ -101,8 +116,8 @@ void DateAutentificare::verificaSecuritate() const
 std::map<std::string, std::string> DateAutentificare::getDatePentruSalvare() const
 {
     std::map<std::string, std::string> date;
-    date["platforma"] = getEticheta(); // Folosim eticheta ca platforma
-    date["utilizator"] = numeUtilizator;
+    date["platforma"] = getEticheta();
+    date["utilizator"] = utilizator;
     date["parola"] = parola;
     return date;
 }
