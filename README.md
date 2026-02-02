@@ -52,6 +52,12 @@ The project showcases advanced C++ use and well-known design patterns.
 - **Custom Exceptions:** Minor changes.
 
 ---
+
+## 📜 Changelog & Version History
+Please refer to **[CHANGELOG.md](CHANGELOG.md)** for a detailed list of all changes, new features, and bug fixes implemented in the latest build.
+
+---
+
 ## 📜 License
 This software is proprietary. Viewing and running are allowed, but **modifying or redistributing the code is strictly prohibited**. See the [LICENSE](LICENSE) file for details.
 

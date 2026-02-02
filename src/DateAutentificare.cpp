@@ -22,12 +22,12 @@ DateAutentificare::DateAutentificare(const std::string& eticheta_,
                                      const std::string& url_,
                                      const std::string& note_)
     : Seif(eticheta_),
+      numePlatforma(eticheta_),
       utilizator(utilizator_),
       parola(parola_),
       url(url_),
       note(note_)
 {
-    numePlatforma = eticheta_;
 }
 
 /**
@@ -37,12 +37,12 @@ DateAutentificare::DateAutentificare(const std::string& eticheta_,
  */
 DateAutentificare::DateAutentificare(const std::map<std::string, std::string>& date)
     : Seif(date.at("platforma")),
+      numePlatforma(date.at("platforma")),
       utilizator(date.at("utilizator")),
       parola(date.at("parola")),
       url(date.at("url")),
       note(date.at("note"))
 {
-    numePlatforma = date.at("platforma");
 }
 
 /**
@@ -249,6 +249,7 @@ void DateAutentificare::CriptareVigenere()
  *
  * Applies the same keystream XOR to restore the clear password.
  */
+// cppcheck-suppress unusedFunction
 void DateAutentificare::deCriptareVigenere()
 {
     CriptareVigenere(); // symmetric XOR with SHA3-derived keystream

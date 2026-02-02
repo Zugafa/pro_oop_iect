@@ -28,6 +28,7 @@ void CardBancar::afiseaza(std::ostream& os) const
 /**
  * @brief Validates CVV length and prints security status.
  */
+// cppcheck-suppress unusedFunction
 void CardBancar::verificaSecuritate() const
 {
     if (cvv.length() != 3)

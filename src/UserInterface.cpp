@@ -980,7 +980,7 @@ void UserInterface::drawVault()
             // b) Cautare Extinsa (User, URL, Holder)
             if (!found)
             {
-                if (auto* da = dynamic_cast<DateAutentificare*>(itm))
+                if (const auto* da = dynamic_cast<const DateAutentificare*>(itm))
                 {
                     std::string u = da->getUtilizator();
                     std::string url = da->getUrl();
@@ -988,7 +988,7 @@ void UserInterface::drawVault()
                     std::transform(url.begin(), url.end(), url.begin(), ::tolower);
                     if (u.find(q) != std::string::npos || url.find(q) != std::string::npos) found = true;
                 }
-                else if (auto* cb = dynamic_cast<CardBancar*>(itm))
+                else if (const auto* cb = dynamic_cast<const CardBancar*>(itm))
                 {
                     std::string holder = cb->getNumeDetinator();
                     std::transform(holder.begin(), holder.end(), holder.begin(), ::tolower);
@@ -1007,13 +1007,13 @@ void UserInterface::drawVault()
 
         if (currentCat == Category::Cards && activeCriteria == SortCriteria::CardHolder)
         {
-            if (auto* c1 = dynamic_cast<CardBancar*>(a)) s1 = c1->getNumeDetinator();
-            if (auto* c2 = dynamic_cast<CardBancar*>(b)) s2 = c2->getNumeDetinator();
+            if (const auto* c1 = dynamic_cast<const CardBancar*>(a)) s1 = c1->getNumeDetinator();
+            if (const auto* c2 = dynamic_cast<const CardBancar*>(b)) s2 = c2->getNumeDetinator();
         }
         else if (currentCat == Category::Cards && activeCriteria == SortCriteria::ExpiryDate)
         {
-            if (auto* c1 = dynamic_cast<CardBancar*>(a)) s1 = c1->getDataExp();
-            if (auto* c2 = dynamic_cast<CardBancar*>(b)) s2 = c2->getDataExp();
+            if (const auto* c1 = dynamic_cast<const CardBancar*>(a)) s1 = c1->getDataExp();
+            if (const auto* c2 = dynamic_cast<const CardBancar*>(b)) s2 = c2->getDataExp();
             if (s1.length() == 5) s1 = s1.substr(3, 2) + s1.substr(0, 2);
             if (s2.length() == 5) s2 = s2.substr(3, 2) + s2.substr(0, 2);
         }
@@ -1042,25 +1042,25 @@ void UserInterface::drawVault()
         focusKey = focusPass ? "pass" : "eticheta";
         buffers["eticheta"] = toSfStr(item->getEticheta());
 
-        if (auto* da = dynamic_cast<DateAutentificare*>(item))
+        if (const auto* da = dynamic_cast<const DateAutentificare*>(item))
         {
             buffers["user"] = toSfStr(da->getUtilizator());
             buffers["pass"] = toSfStr(da->getParola());
             buffers["url"] = toSfStr(da->getUrl());
             buffers["note"] = toSfStr(da->getNote());
         }
-        else if (auto* cb = dynamic_cast<CardBancar*>(item))
+        else if (const auto* cb = dynamic_cast<const CardBancar*>(item))
         {
             buffers["num"] = toSfStr(cb->getNumar());
             buffers["exp"] = toSfStr(cb->getDataExp());
             buffers["cvv"] = toSfStr(cb->getCVV());
             buffers["holder"] = toSfStr(cb->getNumeDetinator());
         }
-        else if (auto* ns = dynamic_cast<NotitaSecurizata*>(item))
+        else if (const auto* ns = dynamic_cast<const NotitaSecurizata*>(item))
         {
             buffers["note"] = toSfStr(ns->getNotita());
         }
-        else if (auto* id = dynamic_cast<Identitate*>(item))
+        else if (const auto* id = dynamic_cast<const Identitate*>(item))
         {
             buffers["fn"] = toSfStr(id->get_prenume());
             buffers["ln"] = toSfStr(id->get_nume());
@@ -1086,22 +1086,22 @@ void UserInterface::drawVault()
 
     if (menuOpenItem != nullptr)
     {
-        if (dynamic_cast<DateAutentificare*>(menuOpenItem))
+        if (dynamic_cast<const DateAutentificare*>(menuOpenItem))
         {
             opts.push_back({"Copy Username", iconCopy, 10});
             opts.push_back({"Copy Password", iconCopy, 11});
             opts.push_back({"Open Website", iconGlobe, 2});
         }
-        else if (dynamic_cast<CardBancar*>(menuOpenItem))
+        else if (dynamic_cast<const CardBancar*>(menuOpenItem))
         {
             opts.push_back({"Copy Number", iconCopy, 12});
             opts.push_back({"Copy CVV", iconCopy, 13});
         }
-        else if (dynamic_cast<NotitaSecurizata*>(menuOpenItem))
+        else if (dynamic_cast<const NotitaSecurizata*>(menuOpenItem))
         {
             opts.push_back({"Copy Note", iconCopy, 14});
         }
-        else if (dynamic_cast<Identitate*>(menuOpenItem))
+        else if (dynamic_cast<const Identitate*>(menuOpenItem))
         {
             opts.push_back({"Copy Name", iconCopy, 20});
             opts.push_back({"Copy Phone", iconCopy, 21});
@@ -1151,22 +1151,22 @@ void UserInterface::drawVault()
             std::string sub = itm->getTip();
             bool isNote = false; // Flag pentru a sti daca centram titlul
 
-            if (auto* da = dynamic_cast<DateAutentificare*>(itm))
+            if (const auto* da = dynamic_cast<const DateAutentificare*>(itm))
             {
                 sub = da->getUtilizator();
             }
-            else if (auto* cb = dynamic_cast<CardBancar*>(itm))
+            else if (const auto* cb = dynamic_cast<const CardBancar*>(itm))
             {
                 std::string hiddenNum = "**** " + cb->getNumar().substr(
                     cb->getNumar().length() > 4 ? cb->getNumar().length() - 4 : 0);
                 if (!cb->getNumeDetinator().empty()) sub = cb->getNumeDetinator() + " | " + hiddenNum;
                 else sub = hiddenNum;
             }
-            else if (auto* id = dynamic_cast<Identitate*>(itm))
+            else if (const auto* id = dynamic_cast<const Identitate*>(itm))
             {
                 sub = id->get_prenume() + " " + id->get_nume();
             }
-            else if (dynamic_cast<NotitaSecurizata*>(itm))
+            else if (dynamic_cast<const NotitaSecurizata*>(itm))
             {
                 sub = ""; // Fara text secundar
                 isNote = true; // Marcam ca fiind notita
@@ -1344,55 +1344,55 @@ void UserInterface::drawVault()
 
                 if (opt.action == 20)
                 {
-                    if (auto* id = dynamic_cast<Identitate*>(menuOpenItem))
+                    if (const auto* id = dynamic_cast<const Identitate*>(menuOpenItem))
                         sf::Clipboard::setString(
                             id->get_prenume() + " " + id->get_nume());
                     showToast("Name copied!");
                 }
                 if (opt.action == 21)
                 {
-                    if (auto* id = dynamic_cast<Identitate*>(menuOpenItem)) sf::Clipboard::setString(id->get_telefon());
+                    if (const auto* id = dynamic_cast<const Identitate*>(menuOpenItem)) sf::Clipboard::setString(id->get_telefon());
                     showToast("Phone copied!");
                 }
                 if (opt.action == 22)
                 {
-                    if (auto* id = dynamic_cast<Identitate*>(menuOpenItem)) sf::Clipboard::setString(id->get_email());
+                    if (const auto* id = dynamic_cast<const Identitate*>(menuOpenItem)) sf::Clipboard::setString(id->get_email());
                     showToast("Email copied!");
                 }
                 if (opt.action == 23)
                 {
-                    if (auto* id = dynamic_cast<Identitate*>(menuOpenItem))
+                    if (const auto* id = dynamic_cast<const Identitate*>(menuOpenItem))
                         sf::Clipboard::setString(
                             id->get_strada() + ", " + id->get_oras() + ", " + id->get_judet());
                     showToast("Address copied!");
                 }
                 if (opt.action == 10)
                 {
-                    if (auto* da = dynamic_cast<DateAutentificare*>(menuOpenItem))
+                    if (const auto* da = dynamic_cast<const DateAutentificare*>(menuOpenItem))
                         sf::Clipboard::setString(
                             da->getUtilizator());
                     showToast("Copied Username!");
                 }
                 if (opt.action == 11)
                 {
-                    if (auto* da = dynamic_cast<DateAutentificare*>(menuOpenItem))
+                    if (const auto* da = dynamic_cast<const DateAutentificare*>(menuOpenItem))
                         sf::Clipboard::setString(
                             da->getParola());
                     showToast("Copied Password!");
                 }
                 if (opt.action == 12)
                 {
-                    if (auto* cb = dynamic_cast<CardBancar*>(menuOpenItem)) sf::Clipboard::setString(cb->getNumar());
+                    if (const auto* cb = dynamic_cast<const CardBancar*>(menuOpenItem)) sf::Clipboard::setString(cb->getNumar());
                     showToast("Copied Card Number!");
                 }
                 if (opt.action == 13)
                 {
-                    if (auto* cb = dynamic_cast<CardBancar*>(menuOpenItem)) sf::Clipboard::setString(cb->getCVV());
+                    if (const auto* cb = dynamic_cast<const CardBancar*>(menuOpenItem)) sf::Clipboard::setString(cb->getCVV());
                     showToast("Copied CVV!");
                 }
                 if (opt.action == 14)
                 {
-                    if (auto* ns = dynamic_cast<NotitaSecurizata*>(menuOpenItem))
+                    if (const auto* ns = dynamic_cast<const NotitaSecurizata*>(menuOpenItem))
                         sf::Clipboard::setString(
                             ns->getNotita());
                     showToast("Copied Note!");
@@ -1400,7 +1400,7 @@ void UserInterface::drawVault()
 
                 if (opt.action == 2)
                 {
-                    if (auto* da = dynamic_cast<DateAutentificare*>(menuOpenItem))
+                    if (const auto* da = dynamic_cast<const DateAutentificare*>(menuOpenItem))
                     {
 #ifdef _WIN32
                         ShellExecuteA(0, "open", da->getUrl().c_str(), 0, 0, SW_SHOW);
@@ -1528,7 +1528,7 @@ void UserInterface::drawSecurityReport()
                 focusKey = "eticheta";
                 buffers["eticheta"] = toSfStr(itm->getEticheta());
 
-                if (auto* da = dynamic_cast<DateAutentificare*>(itm))
+                if (const auto* da = dynamic_cast<const DateAutentificare*>(itm))
                 {
                     currentCat = Category::Accounts;
                     buffers["user"] = toSfStr(da->getUtilizator());
@@ -1537,7 +1537,7 @@ void UserInterface::drawSecurityReport()
                     buffers["note"] = toSfStr(da->getNote());
                     focusKey = "pass"; // focus password when coming from Security
                 }
-                else if (auto* cb = dynamic_cast<CardBancar*>(itm))
+                else if (const auto* cb = dynamic_cast<const CardBancar*>(itm))
                 {
                     currentCat = Category::Cards;
                     buffers["num"] = toSfStr(cb->getNumar());
@@ -1545,12 +1545,12 @@ void UserInterface::drawSecurityReport()
                     buffers["cvv"] = toSfStr(cb->getCVV());
                     buffers["holder"] = toSfStr(cb->getNumeDetinator());
                 }
-                else if (auto* ns = dynamic_cast<NotitaSecurizata*>(itm))
+                else if (const auto* ns = dynamic_cast<const NotitaSecurizata*>(itm))
                 {
                     currentCat = Category::Notes;
                     buffers["note"] = toSfStr(ns->getNotita());
                 }
-                else if (auto* id = dynamic_cast<Identitate*>(itm))
+                else if (const auto* id = dynamic_cast<const Identitate*>(itm))
                 {
                     currentCat = Category::Identities;
                     buffers["fn"] = toSfStr(id->get_prenume());
@@ -2487,7 +2487,7 @@ void UserInterface::drawEditForm()
             if (currentCat == Category::Accounts)
             {
                 std::string p = date["pass"];
-                auto& cfg = Configuratie::getInstance();
+                const auto& cfg = Configuratie::getInstance();
                 if (p.length() < cfg.getLungimeMinimaParola())
                     throw EroareValidare(date["eticheta"], static_cast<int>(p.length()),
                                          static_cast<int>(cfg.getLungimeMinimaParola()));
@@ -2510,15 +2510,12 @@ void UserInterface::drawEditForm()
                     date["platforma"] = date["eticheta"];
                     date["utilizator"] = date["user"];
                     date["parola"] = date["pass"];
-                    date["url"] = date["url"];
-                    date["note"] = date["note"];
                     gp.adaugaObiectInSeif("DateAutentificare", date);
                 }
                 else if (currentCat == Category::Cards)
                 {
                     date["numar"] = date["num"];
                     date["dataExpirare"] = date["exp"];
-                    date["cvv"] = date["cvv"];
                     date["numeDetinator"] = date["holder"];
                     gp.adaugaObiectInSeif("CardBancar", date);
                 }
@@ -2826,7 +2823,7 @@ void UserInterface::drawSortModal()
     else
     {
         options.push_back({"Title", SortCriteria::Label});
-        if (tempCriteria != SortCriteria::Label) tempCriteria = SortCriteria::Label;
+        tempCriteria = SortCriteria::Label;
     }
 
     // 2. Calcul Dimensiuni (Mult mai mari)

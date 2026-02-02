@@ -45,3 +45,19 @@ All notable changes to the **S.C.R.I.P.T Password Manager** project since Milest
 * Refactored `UserInterface::processEvents` to handle complex keyboard states (Ctrl/Shift modifiers).
 * Refactored `UserInterface::drawSortModal` to auto-calculate height and center itself on screen based on the number of active options.
 * Updated `SeifFactory` to handle backward compatibility when loading older data files without the `holder` field.
+
+### 🔧 Code Quality & Refactoring
+* **Cppcheck Compliance:** Addressed all static analysis warnings from Cppcheck:
+  * **Member Initialization:** Refactored `DateAutentificare` constructors to use member initialization lists for `numePlatforma` (performance improvement).
+  * **Removed Redundant Code:** Eliminated self-assignments in `UserInterface.cpp` (`date["url"] = date["url"]`, `date["note"] = date["note"]`, `date["cvv"] = date["cvv"]`).
+  * **Simplified Logic:** Replaced redundant conditional `if (tempCriteria != SortCriteria::Label)` with direct assignment in `UserInterface.cpp`.
+  * **Const Correctness:** Added `const` qualifiers throughout the codebase:
+    - Singleton references: `const auto& cfg = Configuratie::getInstance()`, `const auto& gp = GestionarParole::getInstance()`.
+    - Read-only pointers: Updated all `dynamic_cast` pointers that only read data to use `const` in `UserInterface.cpp`.
+    - Loop iterators: Made all range-based for loops use `const auto*` in `SecurityMonitor.cpp` for read-only access.
+    - Local arrays: Made `hs[5]` array `const` in SHA1 implementation (`SecurityMonitor.cpp`).
+    - Vault iteration: Changed `Seif* item` to `const Seif* item` in `GestionarParole.cpp:61`.
+  * **Suppressed Intentional Warnings:** Added `// cppcheck-suppress unusedFunction` comments for API methods reserved for future use:
+    - `GestionarParole::logout()`, `Manager::getElem()`, `Manager::getDimensiune()`, `Manager::stergeElem()`.
+    - `SecurityMonitor::getAlerte()`, `SecurityMonitor::getDuplicateCount()`.
+    - `Utilizator::getEmail()`, `CardBancar::verificaSecuritate()`, `DateAutentificare::deCriptareVigenere()`.

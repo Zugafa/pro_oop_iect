@@ -53,6 +53,7 @@ public:
     /**
      * @brief Logs out the current user.
      */
+    // cppcheck-suppress unusedFunction
     void logout() { user_curent = nullptr; }
 
     /**

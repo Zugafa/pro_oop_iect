@@ -58,7 +58,7 @@ void GestionarParole::salveazaDatelePeDisc() const
 
     size_t total = user_curent->getNrObiecte();
     for(size_t i = 0; i < total; ++i) {
-        Seif* item = user_curent->getObiectAt(static_cast<int>(i));
+        const Seif* item = user_curent->getObiectAt(static_cast<int>(i));
         auto date = item->getDatePentruSalvare();
 
         // Build data string

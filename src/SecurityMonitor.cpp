@@ -84,7 +84,7 @@ namespace
         }
 
         std::array<uint8_t, 20> out{};
-        uint32 hs[5] = {h0, h1, h2, h3, h4};
+        const uint32 hs[5] = {h0, h1, h2, h3, h4};
         for (int i = 0; i < 5; ++i)
         {
             out[i * 4 + 0] = static_cast<uint8_t>((hs[i] >> 24) & 0xFF);
@@ -193,7 +193,7 @@ void SecurityMonitor::update() {
     const auto& cfg = Configuratie::getInstance();
     std::unordered_map<std::string, std::vector<std::string>> paroleFolosite;
 
-    for (auto* cont : conturi)
+    for (const auto* cont : conturi)
     {
         const std::string pwd = cont->getParola();
         const std::string label = cont->getEticheta();
@@ -268,7 +268,7 @@ void SecurityMonitor::update() {
     }
 
     // Populate missing breach info entries for un-checked accounts (if any)
-    for (auto* cont : conturi)
+    for (const auto* cont : conturi)
     {
         const std::string label = cont->getEticheta();
         if (!breachCache.count(label))
@@ -308,7 +308,7 @@ void SecurityMonitor::update() {
     int curYear = (local.tm_year + 1900) % 100;
     int curMonth = local.tm_mon + 1;
 
-    for (auto* card : carduri)
+    for (const auto* card : carduri)
     {
         if (card->getCVV().length() != 3)
             addAlert(Severity::Critical,
@@ -357,7 +357,7 @@ void SecurityMonitor::update() {
     }
 
     // ---------- NOTE ----------
-    for (auto* nota : note)
+    for (const auto* nota : note)
     {
         const std::string content = nota->getNotita();
         if (!content.empty() && content.size() < 8)
@@ -378,7 +378,7 @@ void SecurityMonitor::update() {
     std::regex emailRx(R"((\w|[\.-])+@(\w|[\.-]+)\.(\w+))");
     std::regex phoneRx(R"(^[0-9+][0-9\s\-]{6,}$)");
 
-    for (auto* id : identitati)
+    for (const auto* id : identitati)
     {
         if (!std::regex_match(id->get_email(), emailRx))
             addAlert(Severity::Warning,

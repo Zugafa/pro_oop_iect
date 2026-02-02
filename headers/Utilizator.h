@@ -66,6 +66,7 @@ public:
     friend std::ostream& operator<<(std::ostream& out, const Utilizator& user);
 
     [[nodiscard]] const std::string& getNume() const { return nume; }
+    // cppcheck-suppress unusedFunction
     [[nodiscard]] const std::string& getEmail() const { return email; }
 
     /**

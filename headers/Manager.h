@@ -31,6 +31,7 @@ public:
      * @return Reference to the element.
      * @throws EroareAcces if the index is out of bounds.
      */
+    // cppcheck-suppress unusedFunction
     T& getElem(size_t index) {
         if (index < elemente.size())
             return elemente[index];
@@ -42,6 +43,7 @@ public:
      * @brief Returns the number of elements in the collection.
      * @return The size of the collection.
      */
+    // cppcheck-suppress unusedFunction
     [[nodiscard]] size_t getDimensiune() const {
         return elemente.size();
     }
@@ -51,6 +53,7 @@ public:
      * @param index The index of the element to remove.
      * @throws EroareAcces if the index is out of bounds.
      */
+    // cppcheck-suppress unusedFunction
     void stergeElem(size_t index) {
         if (index >= elemente.size())
             throw EroareAcces(static_cast<int>(index), static_cast<int>(elemente.size()));

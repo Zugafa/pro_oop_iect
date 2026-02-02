@@ -68,6 +68,7 @@ public:
      * @brief Returns the list of security alerts.
      * @return Reference to the vector of alert strings.
      */
+    // cppcheck-suppress unusedFunction
     [[nodiscard]] const std::vector<std::string>& getAlerte() const { return alerte; }
 
     /**
@@ -88,6 +89,7 @@ public:
     /**
      * @brief Returns the number of items sharing duplicate passwords.
      */
+    // cppcheck-suppress unusedFunction
     [[nodiscard]] int getDuplicateCount() const { return duplicateCount; }
 };
 
