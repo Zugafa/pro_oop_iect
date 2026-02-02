@@ -22,11 +22,11 @@ DateAutentificare::DateAutentificare(const std::string& eticheta_,
                                      const std::string& url_,
                                      const std::string& note_)
     : Seif(eticheta_),
-      numePlatforma(eticheta_),
-      utilizator(utilizator_),
-      parola(parola_),
-      url(url_),
-      note(note_)
+      utilizator(utilizator_),      // 1. utilizator (era numePlatforma)
+      parola(parola_),              // 2. parola (era utilizator)
+      url(url_),                    // 3. url (era parola)
+      numePlatforma(eticheta_),     // 4. numePlatforma (era url)
+      note(note_)                   // 5. note
 {
 }
 
@@ -37,11 +37,11 @@ DateAutentificare::DateAutentificare(const std::string& eticheta_,
  */
 DateAutentificare::DateAutentificare(const std::map<std::string, std::string>& date)
     : Seif(date.at("platforma")),
-      numePlatforma(date.at("platforma")),
       utilizator(date.at("utilizator")),
       parola(date.at("parola")),
       url(date.at("url")),
-      note(date.at("note"))
+      numePlatforma(date.at("platforma")),
+      note(date.at("note"))              // 5. note
 {
 }
 
@@ -109,7 +109,8 @@ void DateAutentificare::setter_numeUtilizator(const std::string& nouNume)
  * @brief Updates the URL.
  * @param url_ New URL.
  */
-void DateAutentificare::setter_url(const std::string& url_) {
+void DateAutentificare::setter_url(const std::string& url_)
+{
     url = url_;
 }
 
@@ -117,7 +118,8 @@ void DateAutentificare::setter_url(const std::string& url_) {
  * @brief Updates the notes.
  * @param note_ New notes.
  */
-void DateAutentificare::setter_note(const std::string& note_) {
+void DateAutentificare::setter_note(const std::string& note_)
+{
     note = note_;
 }
 
@@ -168,11 +170,30 @@ void DateAutentificare::CriptareVigenere()
 
                 uint64_t B[25];
                 B[0] = st[0];
-                B[1] = rol64(st[6], 44);   B[2] = rol64(st[12], 43);  B[3] = rol64(st[18], 21);  B[4] = rol64(st[24], 14);
-                B[5] = rol64(st[3], 28);   B[6] = rol64(st[9], 20);   B[7] = rol64(st[10], 3);   B[8] = rol64(st[16], 45);  B[9] = rol64(st[22], 61);
-                B[10] = rol64(st[1], 1);   B[11] = rol64(st[7], 6);   B[12] = rol64(st[13], 25); B[13] = rol64(st[19], 8);  B[14] = rol64(st[20], 18);
-                B[15] = rol64(st[4], 27);  B[16] = rol64(st[5], 36);  B[17] = rol64(st[11], 10); B[18] = rol64(st[17], 15); B[19] = rol64(st[23], 56);
-                B[20] = rol64(st[2], 62);  B[21] = rol64(st[8], 55);  B[22] = rol64(st[14], 39); B[23] = rol64(st[15], 41); B[24] = rol64(st[21], 2);
+                B[1] = rol64(st[6], 44);
+                B[2] = rol64(st[12], 43);
+                B[3] = rol64(st[18], 21);
+                B[4] = rol64(st[24], 14);
+                B[5] = rol64(st[3], 28);
+                B[6] = rol64(st[9], 20);
+                B[7] = rol64(st[10], 3);
+                B[8] = rol64(st[16], 45);
+                B[9] = rol64(st[22], 61);
+                B[10] = rol64(st[1], 1);
+                B[11] = rol64(st[7], 6);
+                B[12] = rol64(st[13], 25);
+                B[13] = rol64(st[19], 8);
+                B[14] = rol64(st[20], 18);
+                B[15] = rol64(st[4], 27);
+                B[16] = rol64(st[5], 36);
+                B[17] = rol64(st[11], 10);
+                B[18] = rol64(st[17], 15);
+                B[19] = rol64(st[23], 56);
+                B[20] = rol64(st[2], 62);
+                B[21] = rol64(st[8], 55);
+                B[22] = rol64(st[14], 39);
+                B[23] = rol64(st[15], 41);
+                B[24] = rol64(st[21], 2);
 
                 for (int y = 0; y < 5; ++y)
                 {
@@ -208,11 +229,30 @@ void DateAutentificare::CriptareVigenere()
 
             uint64_t B[25];
             B[0] = st[0];
-            B[1] = rol64(st[6], 44);   B[2] = rol64(st[12], 43);  B[3] = rol64(st[18], 21);  B[4] = rol64(st[24], 14);
-            B[5] = rol64(st[3], 28);   B[6] = rol64(st[9], 20);   B[7] = rol64(st[10], 3);   B[8] = rol64(st[16], 45);  B[9] = rol64(st[22], 61);
-            B[10] = rol64(st[1], 1);   B[11] = rol64(st[7], 6);   B[12] = rol64(st[13], 25); B[13] = rol64(st[19], 8);  B[14] = rol64(st[20], 18);
-            B[15] = rol64(st[4], 27);  B[16] = rol64(st[5], 36);  B[17] = rol64(st[11], 10); B[18] = rol64(st[17], 15); B[19] = rol64(st[23], 56);
-            B[20] = rol64(st[2], 62);  B[21] = rol64(st[8], 55);  B[22] = rol64(st[14], 39); B[23] = rol64(st[15], 41); B[24] = rol64(st[21], 2);
+            B[1] = rol64(st[6], 44);
+            B[2] = rol64(st[12], 43);
+            B[3] = rol64(st[18], 21);
+            B[4] = rol64(st[24], 14);
+            B[5] = rol64(st[3], 28);
+            B[6] = rol64(st[9], 20);
+            B[7] = rol64(st[10], 3);
+            B[8] = rol64(st[16], 45);
+            B[9] = rol64(st[22], 61);
+            B[10] = rol64(st[1], 1);
+            B[11] = rol64(st[7], 6);
+            B[12] = rol64(st[13], 25);
+            B[13] = rol64(st[19], 8);
+            B[14] = rol64(st[20], 18);
+            B[15] = rol64(st[4], 27);
+            B[16] = rol64(st[5], 36);
+            B[17] = rol64(st[11], 10);
+            B[18] = rol64(st[17], 15);
+            B[19] = rol64(st[23], 56);
+            B[20] = rol64(st[2], 62);
+            B[21] = rol64(st[8], 55);
+            B[22] = rol64(st[14], 39);
+            B[23] = rol64(st[15], 41);
+            B[24] = rol64(st[21], 2);
 
             for (int y = 0; y < 5; ++y)
             {

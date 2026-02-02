@@ -1,9 +1,8 @@
 # S.C.R.I.P.T. Password Manager
 
-![C++](https://img.shields.io/badge/C++-20-blue.svg) ![SFML](https://img.shields.io/badge/GUI-SFML%203.0-green.svg) ![License](https://img.shields.io/badge/License-Proprietary-red.svg)
+![C++](https://img.shields.io/badge/C++-20-blue.svg) ![SFML](https://img.shields.io/badge/GUI-SFML%203.0-green.svg) ![License](https://img.shields.io/badge/License-Proprietary-red.svg) [![Changelog](https://img.shields.io/badge/Changelog-History-blue)](CHANGELOG.md)
 
-**S.C.R.I.P.T.** (Secure, Centralized, Reliable, Identity, Password, Tool) is an advanced C++ software tool designed as a secure, centralized solution for managing passwords and digital identities.
-
+> **S.C.R.I.P.T.** (Secure, Centralized, Reliable, Identity, Password, Tool) is an advanced C++ software tool designed as a secure, centralized solution for managing passwords and digital identities.
 ---
 
 ## 💡 Project Idea
@@ -14,7 +13,7 @@ In the digital era, data security isn’t optional. Users juggle numerous accoun
 
 ---
 
-## 🚀 Features & What’s New (v1.0 - Milestone 3)
+## 🚀 Features & What’s New (v3.0 - Milestone 3)
 
 The current version is a big jump from console to a modern graphical interface.
 

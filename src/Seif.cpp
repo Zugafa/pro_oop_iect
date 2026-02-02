@@ -23,6 +23,7 @@ Seif::~Seif()
 /**
  * @brief Returns the total number of objects.
  */
+// cppcheck-suppress unusedFunction
 int Seif::getNumarObiecteTotale()
 {
     return nrObiecteTotale;

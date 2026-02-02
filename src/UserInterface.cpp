@@ -184,7 +184,9 @@ void UserInterface::initMockData()
             if (u->getNrObiecte() == 0)
             {
                 u->adaugaObiect(std::make_shared<DateAutentificare>("Facebook", "andrei.nituica", "ParolaValida123!",
-                                                                    "https://www.facebook.com/", "Main Account"));
+                                                                    "https://www.facebook.com/", "Main account"));
+                u->adaugaObiect(std::make_shared<DateAutentificare>("Netflix (main)", "nituica@test.com", "ParolaValida123!",
+                                                                    "https://www.facebook.com/", "Family account"));
                 u->adaugaObiect(std::make_shared<CardBancar>(
                     "Revolut",
                     "Nituica Andrei-Sebastian", "4556 1234 5678 0000",
@@ -192,14 +194,14 @@ void UserInterface::initMockData()
                     "123"
                 ));
                 u->adaugaObiect(std::make_shared<NotitaSecurizata>("Gate Code", "Access: 9988#"));
-                u->adaugaObiect(std::make_shared<Identitate>("Home", "Nituica", "Andrei", "0720xxx", "a@m.ro", "Str. X",
-                                                             "Otopeni", "IF", "RO", "0771"));
+                u->adaugaObiect(std::make_shared<Identitate>("Home", "Nițuică", "Andrei", "0720001002", "andrei@poo.ro", "Str. CTI",
+                                                             "Otopeni", "IF", "RO", "262"));
             }
         }
     }
     catch (const std::exception& e)
     {
-        std::cerr << "[ERROR] Init failed: " << e.what() << std::endl;
+        std::cerr << "Init failed: " << e.what() << std::endl;
     }
 }
 
@@ -944,27 +946,21 @@ void UserInterface::drawVault()
         return;
     }
 
-    // ============================================================
-    // 1. LOGICA DE DATE (FILTRARE & SORTARE)
-    //    Calculam lista INAINTE de a desena orice, ca sa stim
-    //    dimensiunile pentru scroll.
-    // ============================================================
-
     std::vector<Seif*> visibleItems;
 
-    // A. Filtrare
+    // A. Filtering
     for (size_t i = 0; i < user->getNrObiecte(); ++i)
     {
         Seif* itm = user->getObiectAt((int)i);
 
-        // 1. Categorie
+        // 1. Category
         bool matchCat = (currentCat == Category::Accounts && itm->getTip() == "Date Autentificare") ||
             (currentCat == Category::Cards && itm->getTip() == "Card Bancar") ||
             (currentCat == Category::Notes && itm->getTip() == "Notita Securizata") ||
             (currentCat == Category::Identities && itm->getTip() == "Identitate");
         if (!matchCat) continue;
 
-        // 2. Search Avansat
+        // 2. Advanced search
         if (!searchQuery.empty())
         {
             std::string q = searchQuery;
@@ -1000,8 +996,8 @@ void UserInterface::drawVault()
         visibleItems.push_back(itm);
     }
 
-    // B. Sortare
-    std::sort(visibleItems.begin(), visibleItems.end(), [&](Seif* a, Seif* b)
+    // B. Sorting
+    std::sort(visibleItems.begin(), visibleItems.end(), [&](const Seif* a, const Seif* b)
     {
         std::string s1, s2;
 
@@ -1074,7 +1070,7 @@ void UserInterface::drawVault()
         }
     };
 
-    // Meniu Contextual (Calcul)
+    // Context menu calculus
     sf::FloatRect menuBounds({0.f, 0.f}, {0.f, 0.f});
     struct MenuOpt
     {
@@ -1116,11 +1112,8 @@ void UserInterface::drawVault()
     }
     bool mouseOverMenu = (menuOpenItem != nullptr && menuBounds.contains(mPos));
 
-    // ============================================================
-    // 2. DESENARE LISTA (Stratul de Jos)
-    // ============================================================
+    // 2. Drawing of the list
 
-    // Setam Y-ul de start putin mai jos, ca sa aiba loc header-ul
     float startY = 150.f;
 
     float totalContentHeight = visibleItems.size() * 85.f;
@@ -1133,7 +1126,6 @@ void UserInterface::drawVault()
 
     for (Seif* itm : visibleItems)
     {
-        // Desenam doar daca e vizibil in zona de scroll
         if (cy > startY - 100.f && cy < 900.f)
         {
             sf::RectangleShape card({800.f, 75.f});
@@ -1147,9 +1139,9 @@ void UserInterface::drawVault()
 
             window.draw(card);
 
-            // --- CALCUL TEXT SECUNDAR & TIP ---
+            // Secondary text calculus ---
             std::string sub = itm->getTip();
-            bool isNote = false; // Flag pentru a sti daca centram titlul
+            bool isNote = false; // Centered title flag
 
             if (const auto* da = dynamic_cast<const DateAutentificare*>(itm))
             {
@@ -1172,16 +1164,15 @@ void UserInterface::drawVault()
                 isNote = true; // Marcam ca fiind notita
             }
 
-            // --- DESENARE TITLU ---
+            // Drawing of title
             sf::Text name = createUtf8Text(itm->getEticheta(), 20, sf::Color::Black);
 
-            // [MODIFICAT] Daca e notita, centram vertical (25.f). Altfel punem sus (15.f).
             float titleY = isNote ? (cy + 25.f) : (cy + 15.f);
             name.setPosition({SIDE_W + 60, titleY});
 
             window.draw(name);
 
-            // --- DESENARE TEXT SECUNDAR (Daca exista) ---
+            // Drawing of sec text ---
             if (!sub.empty())
             {
                 sf::Text subT = createUtf8Text(sub, 15, sf::Color(150, 150, 160));
@@ -1189,7 +1180,7 @@ void UserInterface::drawVault()
                 window.draw(subT);
             }
 
-            // Buton "..."
+            // "..." button
             iconMenu.setPosition({SIDE_W + 30 + 760, cy + 37});
 
             if (click && iconMenu.getGlobalBounds().contains(mPos) && !mouseOverMenu && !showSortModal)
@@ -1200,7 +1191,7 @@ void UserInterface::drawVault()
             }
             window.draw(iconMenu);
 
-            // Click pe Card
+            // Card click
             if (click && card.getGlobalBounds().contains(mPos) && !clickedOnMenuTrigger && !mouseOverMenu && !
                 showSortModal)
             {
@@ -1209,19 +1200,15 @@ void UserInterface::drawVault()
         }
         cy += 85.f;
     }
-    // ============================================================
-    // 3. DESENARE HEADER (Stratul de Sus - FIXAT)
-    //    Acum desenam fundalul header-ului PESTE lista scrolata
-    // ============================================================
+    // 3. Drawing of header
 
-    // A. Masca Header (acopera cardurile care urca prea sus)
-    // Dreptunghi de la Y=0 pana la startY (150)
+    // A. Mask
     sf::RectangleShape headerBg({1200.f - SIDE_W, 150.f});
     headerBg.setPosition({SIDE_W, 0.f});
-    headerBg.setFillColor(CLR_BG); // Aceeasi culoare cu fundalul ferestrei
+    headerBg.setFillColor(CLR_BG);
     window.draw(headerBg);
 
-    // B. Elementele Vizuale din Header
+    // B. Elements of header
     std::string titleStr = "My Vault";
     if (currentCat == Category::Security) titleStr = "Security Analysis";
     sf::Text title = createUtf8Text(titleStr, 29, sf::Color::Black);
@@ -1239,14 +1226,13 @@ void UserInterface::drawVault()
         }
         else
         {
-            // 1. Desenam SELECTION BOX (daca avem text selectat)
+            // 1. Drawing of selection box
             if (isSearchFocused && searchCursor != searchAnchor)
             {
                 size_t s = std::min(searchCursor, searchAnchor);
                 size_t e = std::max(searchCursor, searchAnchor);
 
-                // Calculam pozitiile vizuale
-                // Nota: Folosim un text temporar pentru a masura
+                // Position calculus
                 sf::Text tempText = searchText;
                 tempText.setString(searchQuery);
 
@@ -1255,15 +1241,15 @@ void UserInterface::drawVault()
 
                 sf::RectangleShape selRect({endX - startX, 20.f});
                 selRect.setPosition({startX, searchBg.getPosition().y + 10.f});
-                selRect.setFillColor(CLR_SELECT); // Albastru deschis
+                selRect.setFillColor(CLR_SELECT);
                 window.draw(selRect);
             }
 
-            // 2. Desenam Textul
+            // 2. Drawing of text
             searchText.setString(searchQuery);
             window.draw(searchText);
 
-            // 3. Desenam CURSORUL (daca avem focus)
+            // 3. Drawing of cursor
             if (isSearchFocused && showCursor)
             {
                 sf::Vector2f charPos = searchText.findCharacterPos(searchCursor);
@@ -1277,11 +1263,8 @@ void UserInterface::drawVault()
         window.draw(sortBtn);
         window.draw(icon_sort);
     }
-    // ============================================================
-    // 4. DESENARE FAB & MENIU (Stratul Cel Mai de Sus)
-    // ============================================================
-
-    // --- FAB (+ Add) ---
+    // 4. Drawing of FAB and menu
+    // FAB (+ Add)
     {
         sf::RectangleShape fab({160.f, 45.f});
         fab.setPosition({1000, 810});
@@ -1308,7 +1291,7 @@ void UserInterface::drawVault()
         window.draw(fabT);
     }
 
-    // --- MENIU CONTEXTUAL (Overlay) ---
+    // Context menu overlay
     if (menuOpenItem != nullptr)
     {
         sf::RectangleShape menuBg({160.f, menuBounds.size.y});
@@ -1416,7 +1399,7 @@ void UserInterface::drawVault()
                     showDeleteConfirm = true;
                 }
 
-                // RESET SEARCH
+                // Search reset
                 searchQuery = "";
                 isSearchFocused = false;
 
@@ -1443,7 +1426,7 @@ void UserInterface::drawSecurityReport()
         return;
     }
 
-    // Actualizam alertele doar la cerere pentru a evita lag-ul
+    // Alert update
     if (securityNeedsRefresh && !showPassGenModal)
     {
         monitor->update();
@@ -2473,7 +2456,7 @@ void UserInterface::drawEditForm()
         // Poti pastra blocul try/catch existent aici.
         try
         {
-            auto& gp = GestionarParole::getInstance();
+            const auto& gp = GestionarParole::getInstance();
             if (!gp.getUserCrt()) throw EroareValidare("System", "User not logged in!");
 
             std::map<std::string, std::string> date;
