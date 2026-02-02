@@ -5,12 +5,20 @@
 #include "NotitaSecurizata.h"
 #include "ObiectNegasit.h"
 
+/**
+ * @brief Returns the singleton instance of SeifFactory.
+ */
 SeifFactory& SeifFactory::getInstance()
 {
     static SeifFactory instance;
     return instance;
 }
 
+/**
+ * @brief Factory method for creating Seif objects.
+ * @note For "CardBancar", the cardholder name is accepted as "numeDetinator"
+ *       or the legacy key "holder".
+ */
 std::shared_ptr<Seif> SeifFactory::creeazaSeif(const std::string& tip,
                                                const std::map<std::string, std::string>& date)
 {
@@ -26,11 +34,18 @@ std::shared_ptr<Seif> SeifFactory::creeazaSeif(const std::string& tip,
     }
     if (tip == "CardBancar")
     {
+        // Recuperam detinatorul (suport pentru ambele chei)
+        std::string detinator = "";
+        if (date.count("numeDetinator")) detinator = date.at("numeDetinator");
+        else if (date.count("holder")) detinator = date.at("holder");
+
         return std::make_shared<CardBancar>(
             date.at("eticheta"),
+            detinator,
             date.at("numar"),
             date.at("dataExpirare"),
-            date.at("cvv"));
+            date.at("cvv")
+        );
     }
     if (tip == "Identitate")
     {
@@ -52,5 +67,5 @@ std::shared_ptr<Seif> SeifFactory::creeazaSeif(const std::string& tip,
             date.at("eticheta"),
             date.at("notita"));
     }
-    throw ObiectNegasit("SeifFactory: tipul de obiect din seif nu este valid!");
+    throw ObiectNegasit("SeifFactory: Invalid vault item type!");
 }

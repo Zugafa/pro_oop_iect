@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.26)
 
 # NOTE: update executable name in .github/workflows/cmake.yml:25 when changing executable name in this file
 # for now, the project name is used as the executable name
-set(MAIN_PROJECT_NAME "oop")
+set(MAIN_PROJECT_NAME "SCRIPT")
 set(MAIN_EXECUTABLE_NAME "${MAIN_PROJECT_NAME}")
 
 
@@ -76,6 +76,10 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         src/Utilizator.cpp
         src/ResourceManager.cpp
         src/SecurityMonitor.cpp
+        src/PasswordGenerator.cpp
+        src/UserInterface.cpp
+        src/EroareFisier.cpp
+
 
         headers/CardBancar.h
         headers/Configuratie.h
@@ -94,6 +98,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         headers/Utilizator.h
         headers/ResourceManager.hpp
         headers/SecurityMonitor.h
+        headers/UserInterface.h
+        headers/EroareFisier.h
 
         generated/src/Helper.cpp
 )

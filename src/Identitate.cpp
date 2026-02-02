@@ -1,6 +1,9 @@
 #include "Identitate.h"
 #include <iostream>
 
+/**
+ * @brief Detailed constructor.
+ */
 Identitate::Identitate(const std::string& eticheta, const std::string& nume, const std::string& prenume,
                        const std::string& telefon, const std::string& email, const std::string& strada,
                        const std::string& oras,
@@ -14,28 +17,40 @@ Identitate::Identitate(const std::string& eticheta, const std::string& nume, con
 {
 }
 
+/**
+ * @brief Creates a deep copy of the Identitate object.
+ */
 std::shared_ptr<Seif> Identitate::clone() const
 {
     return std::make_shared<Identitate>(*this);
 }
 
+/**
+ * @brief Returns the type label.
+ */
 std::string Identitate::getTip() const
 {
     return "Identitate";
 }
 
+/**
+ * @brief Displays identity details.
+ */
 void Identitate::afiseaza(std::ostream& os) const
 {
-    os << "Nume: " << nume << std::endl << "Prenume: " << prenume << std::endl << "Numar telefon: " << telefon <<
-        std::endl << "E-mail: " << email << std::endl << "Strada: " << strada << std::endl << "Oras: " << oras <<
-        std::endl << "Judet: " << judet <<
-        std::endl << "Tara: " << tara << std::endl << "Cod Postal: " << codPostal << std::endl;
+    os << "Last Name: " << nume << std::endl << "First Name: " << prenume << std::endl << "Phone: " << telefon <<
+        std::endl << "E-mail: " << email << std::endl << "Street: " << strada << std::endl << "City: " << oras <<
+        std::endl << "State/County: " << judet <<
+        std::endl << "Country: " << tara << std::endl << "Postal Code: " << codPostal << std::endl;
 }
 
+/**
+ * @brief Prints a message to verify if identity data is up to date.
+ */
 void Identitate::verificaSecuritate() const
 {
-    std::cout << "[INFO] Identitatea '" << getEticheta() << "': Verifica daca datele (Telefon: "
-        << telefon << ") sunt actualizate.\n";
+    std::cout << "[INFO] Identity '" << getEticheta() << "': Please verify if the data (Phone: "
+        << telefon << ") is up to date.\n";
 }
 
 void Identitate::set_nume(const std::string& numeNou)
@@ -128,6 +143,9 @@ const std::string& Identitate::get_cod_postal() const
     return codPostal;
 }
 
+/**
+ * @brief Returns identity fields as a map for saving.
+ */
 std::map<std::string, std::string> Identitate::getDatePentruSalvare() const
 {
     std::map<std::string, std::string> date;

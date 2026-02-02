@@ -4,14 +4,20 @@
 
 #include "ObiectNegasit.h"
 
+/**
+ * @brief Constructor for ObiectNegasit.
+ */
 ObiectNegasit::ObiectNegasit(const std::string& eticheta) : ScriptException(
-                                                                "Obiectul '" + eticheta + "' nu a fost gasit."),
+                                                                "Object '" + eticheta + "' was not found."),
                                                             etichetaCautata(eticheta)
 {
 }
 
+/**
+ * @brief Returns a suggestion for finding the missing object.
+ */
 std::string ObiectNegasit::getSugestie() const
 {
-    return "Verifica daca ai scris corect eticheta '" + etichetaCautata +
-        "' (case-sensitive) sau listeaza tot continutul seifului inainte de stergere.";
+    return "Check if you typed the label '" + etichetaCautata +
+        "' correctly (case-sensitive) or list all vault contents before trying again.";
 }

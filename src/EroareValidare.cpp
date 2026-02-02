@@ -1,7 +1,10 @@
 #include "EroareValidare.h"
 
+/**
+ * @brief Constructor for length errors.
+ */
 EroareValidare::EroareValidare(const std::string& cont, int len, int min) :
-    ScriptException("Eroare validare (Lungime)"),
+    ScriptException("Validation Error (Length)"),
     lungimePrimita(len),
     lungimeMinima(min),
     esteEroareContinut(false),
@@ -9,8 +12,11 @@ EroareValidare::EroareValidare(const std::string& cont, int len, int min) :
 {
 }
 
+/**
+ * @brief Constructor for content errors.
+ */
 EroareValidare::EroareValidare(const std::string& cont, const std::string& motiv) : ScriptException(
-        "Eroare validare (Conținut)"),
+        "Validation Error (Content)"),
     lungimePrimita(0),
     lungimeMinima(0),
     esteEroareContinut(true),
@@ -19,16 +25,19 @@ EroareValidare::EroareValidare(const std::string& cont, const std::string& motiv
 {
 }
 
+/**
+ * @brief Returns a suggestion based on the type of validation error.
+ */
 std::string EroareValidare::getSugestie() const
 {
     if (esteEroareContinut)
     {
-        return "Pentru contul '" + cont + "', problema este: " + motiv;
+        return "For account '" + cont + "', the problem is: " + motiv;
     }
     else
     {
         int diferenta = lungimeMinima - lungimePrimita;
-        return "Pentru contul '" + cont + "', parola este prea scurta. Mai adauga cel putin " +
-            std::to_string(diferenta) + " caractere.";
+        return "For account '" + cont + "', the password is too short. Add at least " +
+            std::to_string(diferenta) + " more characters.";
     }
 }
